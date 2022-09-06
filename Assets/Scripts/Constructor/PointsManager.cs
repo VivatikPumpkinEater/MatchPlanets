@@ -58,8 +58,9 @@ public class PointsManager : MonoBehaviour
 
             if (_falingImage.fillAmount == 1)
             {
-                
+                EndGame.Instance.FinishedLvl(FinishType.Win);
             }
+            //Debug.Log(_falingImage.fillAmount);
         }
 
         if(_currentStar < _stars.Length)
@@ -71,6 +72,8 @@ public class PointsManager : MonoBehaviour
                 _stars[_currentStar].transform.DOShakeScale(0.3f);
                 
                 _currentStar++;
+                Loading.Instance.CurrentStars = _currentStar;
+                Debug.Log(_currentStar);
             }
         }
     }

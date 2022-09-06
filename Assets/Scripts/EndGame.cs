@@ -106,7 +106,6 @@ public class EndGame : MonoBehaviour
 
     private void ShowRewardVideo()
     {
-        
     }
 
     
