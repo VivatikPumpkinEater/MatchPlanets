@@ -10,9 +10,9 @@ public class Token : MonoBehaviour
     [SerializeField] protected GameObject _outline = null;
 
     //public const int POINTS = 40;
-    public SpriteRenderer Sprite => _spriteRenderer = _spriteRenderer ?? GetComponent<SpriteRenderer>();
+    public SpriteRenderer SpriteRenderer => _spriteRenderer = _spriteRenderer ?? GetComponent<SpriteRenderer>();
     public Bonus Bonus { get; set; } = null;
-    public int Hp { get; set; } = 0;
+    public int Hp { get; set; } = 1;
     public virtual bool Moving { get; set; } = false;
 
     private SpriteRenderer _spriteRenderer = null;

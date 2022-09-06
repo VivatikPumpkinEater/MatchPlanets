@@ -25,6 +25,9 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
     public System.Action<int> AddSteps;
 
     private int _gameOver = 0;
+    private FinishType _finishType;
+
+    private Coroutine _coroutine = null;
 
     private void Awake()
     {
@@ -39,12 +42,26 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
 
     public void FinishedLvl(FinishType type)
     {
-        FSM.SetGameStatus(GameStatus.EndLvl);
+        _finishType = type;
 
+        if (_coroutine == null)
+        {
+            _coroutine = StartCoroutine(WaitEndSteps());
+        }
+    }
+
+    private IEnumerator WaitEndSteps()
+    {
+        while (FSM.Wait)
+        {
+            yield return null;
+        }
+        FSM.SetGameStatus(GameStatus.EndLvl);
+        
         _endPanel.SetActive(true);
         _endPanel.transform.localScale = Vector3.zero;
 
-        switch (type)
+        switch (_finishType)
         {
             case FinishType.Win:
                 Loading.Instance.UpdateLvlData();

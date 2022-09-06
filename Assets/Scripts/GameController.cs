@@ -59,13 +59,15 @@ public class GameController : MonoBehaviour
         FSM.SetGameStatus(GameStatus.Game);
     }
 
-    private void InitLvl(Dictionary<Vector3, CellInfo> field, List<Vector3> spawnPoints, int pointsTarget, int scoreTarget)
+    private void InitLvl(Dictionary<Vector3, CellInfo> field, List<Vector3> spawnPoints, int pointsTarget,
+        int scoreTarget)
     {
         _pointsManager.InitPointsTarget(pointsTarget);
         InitLvl(field, spawnPoints, scoreTarget);
     }
 
-    private void InitLvl(Dictionary<Vector3, CellInfo> field, List<Vector3> spawnPoints, List<TokenTarget> tokenTargets, int scoreTarget)
+    private void InitLvl(Dictionary<Vector3, CellInfo> field, List<Vector3> spawnPoints, List<TokenTarget> tokenTargets,
+        int scoreTarget)
     {
         _lvlTokenTarget = true;
 
@@ -155,83 +157,25 @@ public class GameController : MonoBehaviour
 
                 foreach (var token1 in checkNeigthbor)
                 {
-                    if (token1.Destroy())
-                    {
-                        _fields[token1.transform.position].ActualToken = null;
-                        _tokens.Remove(token1);
-                        _effectsPool.GetFreeElement(token1.transform.position);
-
-                        token1.Sprite.sortingOrder = 5;
-
-                        token1.transform.DOScale(Vector3.zero, _moveTime * 12);
-                        token1.transform.DOJump(_greenEndValue.position, 3, 1, _moveTime * 10).OnComplete
-                        (
-                            () =>
-                            {
-                                Destroy(token1.gameObject);
-                                _pointsManager.AddedPoint(40);
-
-                                if (_lvlTokenTarget)
-                                {
-                                    _tokensTargetController.MinusTargetCount(token1.GetType().ToString());
-                                }
-                            });
-                    }
-                    else
-                    {
-                        if (_lvlTokenTarget)
-                        {
-                            _tokensTargetController.MinusTargetCount(token1.GetType().ToString());
-                        }
-                    }
+                    DestroyTokens(token1);
                 }
 
                 if (token.Bonus)
                 {
                     var toDestroy = token.Bonus.Activate();
-                    
+
                     if (token.Bonus.GetType().ToString() == "Bomb")
                     {
                         _ripplePostProcessor.RippleEffect(token.transform.position);
                     }
-                    
+
                     foreach (var key in toDestroy)
                     {
                         if (_fields.ContainsKey(key) && _fields[key].ActualToken && !_fields[key].ActualToken.Bonus)
                         {
                             Token tmp = _fields[key].ActualToken;
 
-                            if (tmp.Destroy())
-                            {
-
-                                _fields[key].ActualToken = null;
-                                _tokens.Remove(tmp);
-                                _effectsPool.GetFreeElement(key);
-
-                                tmp.Sprite.sortingOrder = 5;
-
-                                tmp.transform.DOScale(Vector3.zero, _moveTime * 12);
-                                tmp.transform.DOJump(_greenEndValue.position, 3, 1, _moveTime * 10)
-                                    .OnComplete
-                                    (
-                                        () =>
-                                        {
-                                            Destroy(tmp.gameObject);
-                                            _pointsManager.AddedPoint(40);
-
-                                            if (_lvlTokenTarget)
-                                            {
-                                                _tokensTargetController.MinusTargetCount(tmp.GetType().ToString());
-                                            }
-                                        });
-                            }
-                            else
-                            {
-                                if (_lvlTokenTarget)
-                                {
-                                    _tokensTargetController.MinusTargetCount(tmp.GetType().ToString());
-                                }
-                            }
+                            DestroyTokens(tmp);
                         }
                     }
 
@@ -240,7 +184,7 @@ public class GameController : MonoBehaviour
 
                 if (_greenEndValue != null)
                 {
-                    token.Sprite.sortingOrder = 5;
+                    token.SpriteRenderer.sortingOrder = 5;
 
                     token.transform.DOScale(Vector3.zero, _moveTime * 12);
                     token.transform.DOJump(_greenEndValue.position, 3, 1, _moveTime * 10).OnComplete
@@ -270,6 +214,39 @@ public class GameController : MonoBehaviour
         yield return new WaitForSecondsRealtime(_destroyTime);
 
         StartCoroutine(Movement3());
+    }
+
+    private void DestroyTokens(Token token)
+    {
+        if (token.Destroy())
+        {
+            _fields[token.transform.position].ActualToken = null;
+            _tokens.Remove(token);
+            _effectsPool.GetFreeElement(token.transform.position);
+
+            token.SpriteRenderer.sortingOrder = 5;
+
+            token.transform.DOScale(Vector3.zero, _moveTime * 12);
+            token.transform.DOJump(_greenEndValue.position, 3, 1, _moveTime * 10).OnComplete
+            (
+                () =>
+                {
+                    Destroy(token.gameObject);
+                    _pointsManager.AddedPoint(40);
+
+                    if (_lvlTokenTarget)
+                    {
+                        _tokensTargetController.MinusTargetCount(token.GetType().ToString());
+                    }
+                });
+        }
+        else
+        {
+            if (_lvlTokenTarget)
+            {
+                _tokensTargetController.MinusTargetCount(token.GetType().ToString());
+            }
+        }
     }
 
     private IEnumerator Movement()
@@ -420,8 +397,6 @@ public class GameController : MonoBehaviour
     {
         bool accept = true;
 
-        float moveTime = _moveTime;
-
         while (accept)
         {
             accept = false;
@@ -446,8 +421,6 @@ public class GameController : MonoBehaviour
 
                         _fields[tokenMove.startPosition].ActualToken = null;
 
-                        //Debug.Log(tokenMove.startPosition);
-
                         _fields[tokenMove.endPosition].ActualToken = tokenMove.Token;
 
                         float moveDuration = _moveTime * tokenMove.Iteration;
@@ -455,7 +428,6 @@ public class GameController : MonoBehaviour
                         tokenMove.Token.transform.DOMove(tokenMove.endPosition, moveDuration).OnComplete(() =>
                         {
                             tokenMove.Token.Moving = false;
-                            
                         });
                     }
 
@@ -466,21 +438,17 @@ public class GameController : MonoBehaviour
             if (accept)
             {
                 SpawnToken();
-
-                //yield return new WaitForSeconds(_moveTime);
             }
 
-            yield return new WaitForSeconds(0);
+            yield return null;
         }
 
-        yield return new WaitForSeconds(0);
+        yield return null;
 
         Debug.Log("END MOVE");
 
-        if (!FSM.EndLvl)
-        {
-            FSM.SetGameStatus(GameStatus.Game);
-        }
+
+        FSM.SetGameStatus(GameStatus.Game);
     }
 
     private TokenMove SearchToken(Vector3 start)

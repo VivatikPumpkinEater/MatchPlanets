@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Rock : Token
 {
-    [SerializeField] private SpriteRenderer _spriteRenderer = null;
     [SerializeField] private Sprite[] _lvls = new Sprite[] { };
 
     [SerializeField] private int _hp = 1;
@@ -13,13 +12,13 @@ public class Rock : Token
     {
         base.Start();
 
-        _spriteRenderer.sprite = _lvls[_hp - 1];
+        SpriteRenderer.sprite = _lvls[_hp - 1];
     }
 
     public override void Init()
     {
         _hp = Hp;
-        _spriteRenderer.sprite = _lvls[_hp - 1];
+        SpriteRenderer.sprite = _lvls[_hp - 1];
     }
 
     protected override void OnMouseDown()
@@ -43,7 +42,7 @@ public class Rock : Token
 
         if (_hp > 0)
         {
-            _spriteRenderer.sprite = _lvls[_hp - 1];
+            SpriteRenderer.sprite = _lvls[_hp - 1];
             return false;
         }
 

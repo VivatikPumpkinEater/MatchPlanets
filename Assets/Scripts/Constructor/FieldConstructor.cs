@@ -244,8 +244,6 @@ public class FieldConstructor : MonoBehaviour
             }
         }
 
-        Debug.Log("valid data");
-        
         Save(lvlData);
     }
 
@@ -268,6 +266,26 @@ public class FieldConstructor : MonoBehaviour
         _saveLvl.interactable = false;
 
         error.transform.DOShakePosition(0.5f, Vector3.right * 250).OnComplete(() => _saveLvl.interactable = true);
+    }
+    
+    private void FormationError(string errorMessage)
+    {
+        _saveLvl.interactable = false;
+
+        _errorScreen.SetActive(true);
+        _errorScreen.transform.localScale = Vector3.zero;
+
+        _errorTxt.text = errorMessage;
+
+        _errorScreen.transform.DOScale(Vector3.one, 1f).OnComplete(() =>
+        {
+            _errorScreen.transform.DOScale(Vector3.zero, 0.3f).OnComplete(() =>
+            {
+                _saveLvl.interactable = true;
+                _errorScreen.SetActive(false);
+            });
+        });
+        //error.transform.DOShakePosition(0.5f, Vector3.right * 250).OnComplete(() => _saveLvl.interactable = true);
     }
 
     private void ShowTargetsSettings(bool b)
@@ -305,6 +323,7 @@ public class FieldConstructor : MonoBehaviour
                 if (constructCell.Cell.ActualToken != null)
                 {
                     cellData.TokenType = constructCell.Cell.ActualToken.GetType().ToString();
+                    cellData.TokenHp = constructCell.Cell.ActualToken.Hp;
                 }
                 else
                 {
@@ -322,6 +341,15 @@ public class FieldConstructor : MonoBehaviour
 
                 spawnPoints.Add(constructCell.SpawnPoint.transform.position);
             }
+        }
+
+        if (spawnPoints.Count == 0)
+        {
+            Debug.Log("No spawn points");
+            
+            FormationError("Please setUp spawn points");
+            
+            return;
         }
 
         lvlData.Name = _inputName.text;

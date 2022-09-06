@@ -10,9 +10,12 @@ public class UIMenu : MonoBehaviour
     [Header("Screens")] [SerializeField] private Transform _startScreen = null;
     [SerializeField] private Transform _lvlScreen = null;
     [SerializeField] private Settings _settingsScreen = null;
+    [SerializeField] private GameObject _developPanel = null;
 
     [Header("Buttons")] [SerializeField] private Button _play = null;
     [SerializeField] private Button _settings = null;
+    [SerializeField] private Button _devPanel = null;
+    [SerializeField] private Button _closeDevPanel = null;
     [SerializeField] private Button _back = null;
 
     private Camera _camera = null;
@@ -39,6 +42,8 @@ public class UIMenu : MonoBehaviour
         _play.onClick.AddListener(ShowLvls);
         _back.onClick.AddListener(ShowStartScreen);
         _settings.onClick.AddListener(ShowSettings);
+        _devPanel.onClick.AddListener(ShowDevelopPanel);
+        _closeDevPanel.onClick.AddListener(CloseDevelopPanel);
     }
 
     private void ShowLvls()
@@ -61,6 +66,13 @@ public class UIMenu : MonoBehaviour
 
         _settingsScreen.CloseSettingsScreen += CloseSettings;
     }
+    
+    private void ShowDevelopPanel()
+    {
+        _developPanel.gameObject.SetActive(true);
+        _developPanel.transform.localScale = Vector3.zero;
+        _developPanel.transform.DOScale(Vector3.one, 0.3f);
+    }
 
     private void CloseSettings()
     {
@@ -68,5 +80,11 @@ public class UIMenu : MonoBehaviour
 
         _settingsScreen.transform.DOScale(Vector3.zero, 0.3f)
             .OnComplete(() => _settingsScreen.gameObject.SetActive(false));
+    }
+    
+    private void CloseDevelopPanel()
+    {
+        _developPanel.transform.DOScale(Vector3.zero, 0.3f)
+            .OnComplete(() => _developPanel.gameObject.SetActive(false));
     }
 }

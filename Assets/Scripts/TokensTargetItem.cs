@@ -30,6 +30,20 @@ public class TokensTargetItem : MonoBehaviour
         _done.gameObject.SetActive(false);
         UpdateUI();
     }
+    
+    public void Init(Sprite tokenSprite, int count, float filling)
+    {
+        _tokenSprite.sprite = tokenSprite;
+        _filling.sprite = tokenSprite;
+        _filling.fillAmount = filling;
+
+        _count = count;
+
+        _step = 1f / _count;
+        
+        _done.gameObject.SetActive(false);
+        UpdateUI();
+    }
 
     public bool TargetMinus()
     {

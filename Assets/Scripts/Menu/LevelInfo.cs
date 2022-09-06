@@ -50,8 +50,9 @@ public class LevelInfo : MonoBehaviour
                 foreach (var tokenTarget in lvlData.TokenTargets)
                 {
                     var tokenTargetItem = Instantiate(_tokensTargetPrefab, _tokensTarget.transform);
-                    tokenTargetItem.Init(tokenTarget.Sprite, tokenTarget.Count);
-
+                    tokenTargetItem.Init(tokenTarget.Sprite, tokenTarget.Count, 1f);
+                    
+                    
                     _tokensTargets.Add(tokenTargetItem.gameObject);
                 }
 

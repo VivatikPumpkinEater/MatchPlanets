@@ -43,14 +43,13 @@ public class PointsManager : MonoBehaviour
     public void InitPerfectScore(int target)
     {
         _stepStars = 1f / ((target / 3f) / 40f);
-        Debug.Log(_stepStars);
     }
 
     public void AddedPoint(int points)
     {
         _score += points;
         _scoreTxt.text = _score.ToString();
-        _scoreTxt.gameObject.transform.DOShakeScale(0.5f).OnComplete(()=> _scoreTxt.gameObject.transform.localScale = Vector3.one);
+        _scoreTxt.gameObject.transform.DOShakeScale(0.5f).OnComplete(()=> _scoreTxt.gameObject.transform.DOScale(Vector3.one, 0.3f));
         
         if (_pointsTargetUse)
         {
@@ -73,7 +72,6 @@ public class PointsManager : MonoBehaviour
                 
                 _currentStar++;
                 Loading.Instance.CurrentStars = _currentStar;
-                Debug.Log(_currentStar);
             }
         }
     }
