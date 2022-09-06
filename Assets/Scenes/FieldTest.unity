@@ -492,6 +492,7 @@ GameObject:
   - component: {fileID: 41525393}
   - component: {fileID: 41525392}
   - component: {fileID: 41525396}
+  - component: {fileID: 41525397}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -577,6 +578,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 063a240d7016a1945bf2e3d541c5c0c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &41525397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41525391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d5a6eef8611799468a21cb5a6d5752e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RippleMaterial: {fileID: 2100000, guid: bc5c79b373b1af94c9ef48862aff343d, type: 2}
+  MaxAmount: 50
+  Friction: 0.9
 --- !u!1 &45978840
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,7 +1032,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a9b5bd759bd0248a4d559d883511c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lvlsConstruct: {fileID: 0}
+  lvlsConstruct: {fileID: 11400000, guid: a3b5eb94b5dc98a43857d5bfcaec0400, type: 2}
   _cellPrefab: {fileID: 6474453214548730636, guid: 18dbbac6194dccc42a21b2d9f74a19fe, type: 3}
   _tokens:
   - {fileID: 9044137859512898200, guid: 4fee5cd97ae3e1c49a9a538f5a4eb5ad, type: 3}
@@ -2963,6 +2979,7 @@ MonoBehaviour:
   _pointsManager: {fileID: 315655916}
   _tokensTargetController: {fileID: 46794001}
   _greenEndValue: {fileID: 461208189}
+  _ripplePostProcessor: {fileID: 41525397}
 --- !u!4 &699163358
 Transform:
   m_ObjectHideFlags: 0
@@ -4442,7 +4459,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1852385967
-  m_SortingLayer: -2
+  m_SortingLayer: 0
   m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 1693613ae8445364ba3ec9dd0704f5db, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

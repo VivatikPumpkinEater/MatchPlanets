@@ -22,6 +22,8 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private Transform _greenEndValue = null;
 
+    [SerializeField] private RipplePostProcessor _ripplePostProcessor = null;
+
     public List<Token> Tokens => _tokens;
 
     private List<Token> _tokens = new List<Token>();
@@ -187,7 +189,12 @@ public class GameController : MonoBehaviour
                 if (token.Bonus)
                 {
                     var toDestroy = token.Bonus.Activate();
-
+                    
+                    if (token.Bonus.GetType().ToString() == "Bomb")
+                    {
+                        _ripplePostProcessor.RippleEffect(token.transform.position);
+                    }
+                    
                     foreach (var key in toDestroy)
                     {
                         if (_fields.ContainsKey(key) && _fields[key].ActualToken && !_fields[key].ActualToken.Bonus)
