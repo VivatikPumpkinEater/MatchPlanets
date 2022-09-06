@@ -64,10 +64,12 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
         switch (_finishType)
         {
             case FinishType.Win:
+                AudioManager.Instance.GetEffect("Win");
                 Loading.Instance.UpdateLvlData();
                 ShowWinPanel();
                 break;
             case FinishType.Lose:
+                AudioManager.Instance.GetEffect("Lose");
                 ShowLosePanel();
                 break;
         }
@@ -84,13 +86,15 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
 
     private IEnumerator ShowStars(int starCount)
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.3f);
 
         for (int i = 0; i < starCount; i++)
         {
             _stars[i].gameObject.SetActive(true);
 
             _stars[i].transform.DOScale(Vector3.one, 0.3f);
+            
+            AudioManager.Instance.GetEffect("Star");
 
             yield return new WaitForSeconds(0.4f);
         }

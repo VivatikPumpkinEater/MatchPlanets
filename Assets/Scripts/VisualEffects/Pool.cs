@@ -67,7 +67,7 @@ public class Pool : MonoBehaviour
         return element;
     }
 
-    public PoolObject GetFreeElement(Transform transform) // transform or pivot
+    public PoolObject GetFreeElement(Transform transform)
     {
         var element = GetFreeElement();
         element.transform.position = transform.position;

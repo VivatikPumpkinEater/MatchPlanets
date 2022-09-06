@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Selector : MonoBehaviour
 {
-    [SerializeField]private List<Token> _tokens = new List<Token>();
+    private List<Token> _tokens = new List<Token>();
 
     private GameController _gameController = null;
 

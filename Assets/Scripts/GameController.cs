@@ -147,6 +147,8 @@ public class GameController : MonoBehaviour
         {
             if (_fields.ContainsKey(token.transform.position) && _fields[token.transform.position].ActualToken)
             {
+                AudioManager.Instance.GetEffect("TokenDestroy");
+                
                 _fields[token.transform.position].ActualToken = null;
 
                 _tokens.Remove(token);
@@ -164,9 +166,15 @@ public class GameController : MonoBehaviour
                 {
                     var toDestroy = token.Bonus.Activate();
 
-                    if (token.Bonus.GetType().ToString() == "Bomb")
+                    switch (token.Bonus.GetType().ToString())
                     {
-                        _ripplePostProcessor.RippleEffect(token.transform.position);
+                        case"Bomb":
+                            AudioManager.Instance.GetEffect("Boom");
+                            _ripplePostProcessor.RippleEffect(token.transform.position);
+                            break;
+                        case "Rocket":
+                            AudioManager.Instance.GetEffect("Rocket");
+                            break;
                     }
 
                     foreach (var key in toDestroy)

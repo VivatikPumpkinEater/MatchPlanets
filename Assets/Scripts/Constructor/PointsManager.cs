@@ -47,6 +47,7 @@ public class PointsManager : MonoBehaviour
 
     public void AddedPoint(int points)
     {
+        AudioManager.Instance.GetEffect("Point");
         _score += points;
         _scoreTxt.text = _score.ToString();
         _scoreTxt.gameObject.transform.DOShakeScale(0.5f).OnComplete(()=> _scoreTxt.gameObject.transform.DOScale(Vector3.one, 0.3f));

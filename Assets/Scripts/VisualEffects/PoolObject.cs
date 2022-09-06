@@ -8,4 +8,16 @@ public class PoolObject : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+
+    public void ReturnToPool(float duration)
+    {
+        StartCoroutine(Wait(duration));
+    }
+    
+    private IEnumerator Wait(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        ReturnToPool();
+    }
 }
