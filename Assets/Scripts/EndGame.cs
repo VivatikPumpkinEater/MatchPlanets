@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AppodealAds.Unity.Common;
+using AppodealAds.Unity.Api;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EndGame : MonoBehaviour
+public class EndGame : MonoBehaviour , IRewardedVideoAdListener
 {
     [SerializeField] private GameObject _endPanel = null;
     [SerializeField] private TMP_Text _endStatus = null;
@@ -106,9 +108,53 @@ public class EndGame : MonoBehaviour
 
     private void ShowRewardVideo()
     {
+        Appodeal.show(Appodeal.REWARDED_VIDEO);
     }
 
-    
+    public void onRewardedVideoLoaded(bool isPrecache)
+    {
+        _showAds.GetComponentInChildren<TMP_Text>().text = "SHOW REWARDED VIDEO";
+        Debug.Log("onRewardedVideoLoaded");
+        Debug.Log($"getPredictedEcpm(): {Appodeal.getPredictedEcpm(Appodeal.REWARDED_VIDEO)}");
+    }
+
+    public void onRewardedVideoFailedToLoad()
+    {
+        Debug.Log("onRewardedVideoFailedToLoad");
+    }
+
+    public void onRewardedVideoShowFailed()
+    {
+        Debug.Log("onRewardedVideoShowFailed");
+    }
+
+    public void onRewardedVideoShown()
+    {
+        Debug.Log("onRewardedVideoShown");
+    }
+
+    public void onRewardedVideoClosed(bool finished)
+    {
+        _showAds.GetComponentInChildren<TMP_Text>().text = "CACHE REWARDED VIDEO";
+        Debug.Log($"onRewardedVideoClosed. Finished - {finished}");
+    }
+
+    public void onRewardedVideoFinished(double amount, string name)
+    {
+        Debug.Log("onRewardedVideoFinished. Reward: " + amount + " " + name);
+        
+        ResumeLevel();
+    }
+
+    public void onRewardedVideoExpired()
+    {
+        Debug.Log("onRewardedVideoExpired");
+    }
+
+    public void onRewardedVideoClicked()
+    {
+        Debug.Log("onRewardedVideoClicked");
+    }
 }
 
 public enum FinishType
