@@ -9,9 +9,6 @@ public class GyroscopeController : MonoBehaviour
 
     private Gyroscope _gyroscope = null;
 
-    public bool Moving { get; set; } = false;
-    public int Speed { get; set; } = 0;
-
     private void Start()
     {
         _gyroscope = Input.gyro;
@@ -22,12 +19,6 @@ public class GyroscopeController : MonoBehaviour
     {
         transform.Translate((float)Math.Round(_gyroscope.rotationRateUnbiased.y, 1) * _speed * Time.deltaTime,
             (float)Math.Round(_gyroscope.rotationRateUnbiased.x, 1) * _speed * Time.deltaTime, 0f);
-
-        if (Moving)
-        {
-            transform.Translate(0f,
-                Speed * _speed * Time.deltaTime, 0f);
-        }
 
         if (Mathf.Abs(transform.position.x) > 4.75)
         {

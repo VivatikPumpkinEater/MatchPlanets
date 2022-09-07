@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] private AudioSource _musicSource = null;
-    [SerializeField] private AudioSource _effectSource = null;
 
     [SerializeField] private Pool _pool = null;
     
@@ -15,8 +14,9 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private List<EffectClips> _effectClips = new List<EffectClips>();
     public static AudioManager Instance = null;
 
-    private float _currentMusicVolume = 0;
-    private float _currentSoundVolume = 1;
+    public float CurrentMusicVolume{get; private set;} = 1;
+    public float CurrentSoundVolume{get; private set;} = 1;
+    
     private void Awake()
     {
         if (Instance != null)
@@ -29,26 +29,16 @@ public class AudioManager : MonoBehaviour
         
         SetBGMusic("Menu");
     }
-
-    public void MuteMusic(bool mute)
-    {
-        _musicSource.mute = mute;
-    }
-
-    public void MuteEffect(bool mute)
-    {
-        _effectSource.mute = mute;
-    }
-
+    
     public void VolumeMusic(float volume)
     {
-        _currentMusicVolume = volume;
+        CurrentMusicVolume = volume;
         _musicSource.volume = volume;
     }
     
     public void VolumeEffect(float volume)
     {
-        _currentSoundVolume = volume;
+        CurrentSoundVolume = volume;
     }
 
     public void SetBGMusic(string placement)
@@ -74,7 +64,7 @@ public class AudioManager : MonoBehaviour
                 
                 var audioSource = poolObject.GetComponent<AudioSource>();
                 audioSource.clip = effectClip.AudioClip;
-                audioSource.volume = _currentSoundVolume;
+                audioSource.volume = CurrentSoundVolume;
                 audioSource.pitch = Random.Range(1f, 1.5f);
                 audioSource.Play();
 

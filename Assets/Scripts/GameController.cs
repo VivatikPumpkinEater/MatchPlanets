@@ -20,18 +20,16 @@ public class GameController : MonoBehaviour
     [SerializeField] private PointsManager _pointsManager = null;
     [SerializeField] private TokensTargetController _tokensTargetController = null;
 
-    [SerializeField] private Transform _greenEndValue = null;
+    [SerializeField] private Transform _endPoint = null;
 
     [SerializeField] private RipplePostProcessor _ripplePostProcessor = null;
 
     public List<Token> Tokens => _tokens;
 
     private List<Token> _tokens = new List<Token>();
-    private List<Vector3> _emptyCells = new List<Vector3>();
 
     private Dictionary<Vector3, CellInfo> _fields = new Dictionary<Vector3, CellInfo>();
     private List<Vector3> _spawnPoints = new List<Vector3>();
-    private Dictionary<Token, Vector3> test = new Dictionary<Token, Vector3>();
 
     private bool _move = false;
     private bool _lvlTokenTarget = false;
@@ -148,14 +146,14 @@ public class GameController : MonoBehaviour
             if (_fields.ContainsKey(token.transform.position) && _fields[token.transform.position].ActualToken)
             {
                 AudioManager.Instance.GetEffect("TokenDestroy");
-                
+
                 _fields[token.transform.position].ActualToken = null;
 
                 _tokens.Remove(token);
 
                 _effectsPool.GetFreeElement(token.transform.position);
 
-                var checkNeigthbor = CheckHen(token.transform.position);
+                var checkNeigthbor = CheckNeighbours(token.transform.position);
 
                 foreach (var token1 in checkNeigthbor)
                 {
@@ -168,7 +166,7 @@ public class GameController : MonoBehaviour
 
                     switch (token.Bonus.GetType().ToString())
                     {
-                        case"Bomb":
+                        case "Bomb":
                             AudioManager.Instance.GetEffect("Boom");
                             _ripplePostProcessor.RippleEffect(token.transform.position);
                             break;
@@ -190,12 +188,12 @@ public class GameController : MonoBehaviour
                     yield return new WaitForSecondsRealtime(_destroyTime);
                 }
 
-                if (_greenEndValue != null)
+                if (_endPoint != null)
                 {
                     token.SpriteRenderer.sortingOrder = 5;
 
                     token.transform.DOScale(Vector3.zero, _moveTime * 12);
-                    token.transform.DOJump(_greenEndValue.position, 3, 1, _moveTime * 10).OnComplete
+                    token.transform.DOJump(_endPoint.position, 3, 1, _moveTime * 10).OnComplete
                     (
                         () =>
                         {
@@ -235,7 +233,7 @@ public class GameController : MonoBehaviour
             token.SpriteRenderer.sortingOrder = 5;
 
             token.transform.DOScale(Vector3.zero, _moveTime * 12);
-            token.transform.DOJump(_greenEndValue.position, 3, 1, _moveTime * 10).OnComplete
+            token.transform.DOJump(_endPoint.position, 3, 1, _moveTime * 10).OnComplete
             (
                 () =>
                 {
@@ -254,150 +252,6 @@ public class GameController : MonoBehaviour
             {
                 _tokensTargetController.MinusTargetCount(token.GetType().ToString());
             }
-        }
-    }
-
-    private IEnumerator Movement()
-    {
-        int i = 1;
-
-        while (i > 0)
-        {
-            i = 0;
-
-            if (_tokens.Count == 0)
-            {
-                SpawnToken();
-                yield return new WaitForSeconds(_moveTime);
-            }
-
-            foreach (var token in _tokens)
-            {
-                Vector3 position = Vector3.zero;
-
-                switch (0)
-                {
-                    case 0:
-                        position = token.transform.position + Vector3.down;
-                        break;
-                    case 1:
-                        position = token.transform.position + Vector3.down + Vector3.left;
-                        break;
-                    case 2:
-                        position = token.transform.position + Vector3.down + Vector3.right;
-                        break;
-                }
-
-                if (_fields.ContainsKey(position))
-                {
-                    if (!_fields[position].ActualToken)
-                    {
-                        _fields[token.transform.position].ActualToken = null;
-                        _fields[position].ActualToken = token;
-
-                        if (test.ContainsKey(token))
-                        {
-                            test[token] = position;
-                        }
-                        else
-                        {
-                            test.Add(token, position);
-                        }
-
-                        i = 1;
-
-                        break;
-                    }
-                }
-            }
-
-            foreach (var token in test.Keys)
-            {
-                token.transform.DOMove(test[token], _moveTime);
-            }
-
-            test.Clear();
-
-            if (i == 1)
-            {
-                SpawnToken();
-                yield return new WaitForSeconds(_moveTime);
-            }
-            else
-            {
-                yield return new WaitForSeconds(_moveTime / 10);
-            }
-        }
-
-        Debug.Log("End Dest");
-    }
-
-    private IEnumerator Movement2()
-    {
-        bool accept = true;
-
-        float moveTime = _moveTime;
-
-        while (accept)
-        {
-            accept = false;
-
-            if (_tokens.Count == 0)
-            {
-                SpawnToken();
-                yield return new WaitForSeconds(_moveTime);
-            }
-
-            foreach (var key in _fields.Keys)
-            {
-                CellInfo cell = _fields[key];
-
-                if (!cell.ActualToken)
-                {
-                    TokenMove tokenMove = SearchToken(key);
-
-                    if (tokenMove.Token && !tokenMove.Token.Moving)
-                    {
-                        tokenMove.Token.Moving = true;
-
-                        _fields[tokenMove.startPosition].ActualToken = null;
-
-                        //Debug.Log(tokenMove.startPosition);
-
-                        _fields[tokenMove.endPosition].ActualToken = tokenMove.Token;
-
-                        float moveDuration = _moveTime * tokenMove.Iteration;
-
-                        tokenMove.Token.transform.DOMove(tokenMove.endPosition, moveDuration).OnComplete(() =>
-                        {
-                            tokenMove.Token.transform.DOLocalJump(tokenMove.Token.transform.position, 0.2f, 1, 0.2f)
-                                .OnComplete(() =>
-                                    tokenMove.Token.Moving = false);
-                        });
-                    }
-
-                    if (tokenMove.Token && tokenMove.Token.Moving)
-                    {
-                        accept = true;
-                    }
-                }
-            }
-
-            if (accept)
-            {
-                SpawnToken();
-
-                yield return new WaitForSeconds(_moveTime);
-            }
-        }
-
-        yield return new WaitForSeconds(0);
-
-        Debug.Log("END MOVE");
-
-        if (!FSM.EndLvl)
-        {
-            FSM.SetGameStatus(GameStatus.Game);
         }
     }
 
@@ -422,6 +276,11 @@ public class GameController : MonoBehaviour
                 if (!cell.ActualToken)
                 {
                     TokenMove tokenMove = SearchToken(key);
+
+                    if (!tokenMove.Token)
+                    {
+                        continue;
+                    }
 
                     if (tokenMove.Token && !tokenMove.Token.Moving)
                     {
@@ -537,7 +396,7 @@ public class GameController : MonoBehaviour
         return tokenMove;
     }
 
-    private List<Token> CheckHen(Vector3 start) // соседей 
+    private List<Token> CheckNeighbours(Vector3 start)
     {
         Vector3[] checkPosition = new Vector3[4];
         checkPosition[0] = start + Vector3.up;

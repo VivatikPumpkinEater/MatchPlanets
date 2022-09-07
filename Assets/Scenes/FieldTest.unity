@@ -982,7 +982,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 75694513}
-  - component: {fileID: 75694514}
   - component: {fileID: 75694515}
   m_Layer: 0
   m_Name: Field
@@ -1007,19 +1006,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &75694514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 75694512}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6e9fece779813f4daf88c6b3552c3e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cellPrefabTest: {fileID: 6474453214548730636, guid: 18dbbac6194dccc42a21b2d9f74a19fe, type: 3}
 --- !u!114 &75694515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2843,7 +2829,7 @@ MonoBehaviour:
   _moveTime: 0.1
   _pointsManager: {fileID: 315655916}
   _tokensTargetController: {fileID: 46794001}
-  _greenEndValue: {fileID: 461208189}
+  _endPoint: {fileID: 461208189}
   _ripplePostProcessor: {fileID: 41525397}
 --- !u!4 &699163358
 Transform:
@@ -4746,11 +4732,12 @@ MonoBehaviour:
   _musicSlider: {fileID: 1586928063}
   _soundSlider: {fileID: 67351863}
   _closeButton: {fileID: 0}
-  _soundsIcon:
-  - {fileID: 21300000, guid: 29ef8e666c208bf40a5e5ed183123313, type: 3}
-  - {fileID: 21300000, guid: 692cf70147660db43afdaf4159505b5d, type: 3}
-  - {fileID: 21300000, guid: c43eb4f6e1b35b1488ad684af9a77c66, type: 3}
-  - {fileID: 21300000, guid: eb0e3b64142b19f40a1cce31b9591de1, type: 3}
+  _musicIcons:
+  - {fileID: -1054846879, guid: 2a64a68c30032904fafebf3d6fdd4bf7, type: 3}
+  - {fileID: -1910458604, guid: 2a64a68c30032904fafebf3d6fdd4bf7, type: 3}
+  _soundIcons:
+  - {fileID: -1095567531, guid: 2a64a68c30032904fafebf3d6fdd4bf7, type: 3}
+  - {fileID: -542309841, guid: 2a64a68c30032904fafebf3d6fdd4bf7, type: 3}
 --- !u!1 &1473567164
 GameObject:
   m_ObjectHideFlags: 0

@@ -27,8 +27,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _Amount: 0
-    - _CenterX: 1
-    - _CenterY: 2
+    - _CenterX: 2
+    - _CenterY: 6
     - _WaveAmount: 10
     - _WaveSpeed: 20
     m_Colors: []

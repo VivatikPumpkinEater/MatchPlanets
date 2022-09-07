@@ -14,8 +14,9 @@ public class Settings : MonoBehaviour
 
     [SerializeField] private Button _closeButton = null;
 
-    [SerializeField] private Sprite[] _soundsIcon = new Sprite[] { };
-
+    [SerializeField] private Sprite[] _musicIcons = new Sprite[] { };
+    [SerializeField] private Sprite[] _soundIcons = new Sprite[] { };
+    
     public System.Action CloseSettingsScreen;
 
     private AudioManager _audioManager = null;
@@ -38,27 +39,35 @@ public class Settings : MonoBehaviour
         if (!_audioManager) return;
 
         _musicSlider.onValueChanged.AddListener(ChangeMusicValue);
-        _musicButton.onClick.AddListener(MuteMusic);
         _lastMusicValue = _musicSlider.value;
 
         _soundSlider.onValueChanged.AddListener(ChangeSoundValue);
-        _soundButton.onClick.AddListener(MuteSound);
+
         _lastSoundValue = _soundSlider.value;
+
+        _musicSlider.value = AudioManager.Instance.CurrentMusicVolume;
+        _soundSlider.value = AudioManager.Instance.CurrentSoundVolume;
     }
 
     private void CloseSettings()
     {
         CloseSettingsScreen?.Invoke();
-        Debug.Log("CLOSE SETTINGS");
     }
 
     private void ChangeMusicValue(float value)
     {
         _audioManager.VolumeMusic(value);
 
-        if (value != 0f)
+        if (value == 0f)
         {
-            _lastMusicValue = _musicSlider.value;
+            _muteMusic = true;
+            _musicButton.image.sprite = _musicIcons[0];
+        }
+
+        if (value > 0f && _muteMusic)
+        {
+            _muteMusic = false;
+            _musicButton.image.sprite = _musicIcons[1];
         }
     }
 
@@ -66,43 +75,16 @@ public class Settings : MonoBehaviour
     {
         _audioManager.VolumeEffect(value);
 
-        if (value != 0f)
+        if (value == 0f)
         {
-            _lastSoundValue = _soundSlider.value;
+            _muteSound = true;
+            _soundButton.image.sprite = _soundIcons[0];
         }
-    }
 
-    private void MuteMusic()
-    {
-        _muteMusic = !_muteMusic;
-
-        _audioManager.MuteMusic(_muteMusic);
-
-        switch (_muteMusic)
+        if (value > 0f && _muteSound)
         {
-            case true:
-                _musicSlider.value = 0f;
-                break;
-            case false:
-                _musicSlider.value = _lastMusicValue;
-                break;
-        }
-    }
-
-    private void MuteSound()
-    {
-        _muteSound = !_muteSound;
-
-        _audioManager.MuteEffect(_muteSound);
-
-        switch (_muteSound)
-        {
-            case true:
-                _soundSlider.value = 0f;
-                break;
-            case false:
-                _soundSlider.value = _lastSoundValue;
-                break;
+            _muteSound = false;
+            _soundButton.image.sprite = _soundIcons[1];
         }
     }
 }

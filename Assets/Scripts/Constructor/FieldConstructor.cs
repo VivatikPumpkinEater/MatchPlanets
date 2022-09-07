@@ -184,7 +184,6 @@ public class FieldConstructor : MonoBehaviour
         else
         {
             lvlData.StepCount = int.Parse(_stepCount.text);
-            Debug.Log(lvlData.StepCount);
         }
 
         if (_scoreForStars.text.Length == 0)
