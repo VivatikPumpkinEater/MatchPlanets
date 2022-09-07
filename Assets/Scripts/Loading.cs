@@ -124,9 +124,11 @@ public class Loading : MonoBehaviour
         }
     }
 
-    private IEnumerator LoadingLvl(LvlData lvlData) //bad
+    private IEnumerator LoadingLvl(LvlData lvlData)
     {
         CurrentStars = 0;
+        
+        AudioManager.Instance.GetEffect("Loading");
         
         yield return new WaitForSeconds(2f);
 

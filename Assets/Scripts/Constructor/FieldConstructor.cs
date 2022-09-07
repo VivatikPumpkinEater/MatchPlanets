@@ -26,7 +26,6 @@ public class FieldConstructor : MonoBehaviour
     private GameObject _savePanel = null;
 
     [SerializeField] private GameObject _errorScreen = null;
-    [SerializeField] private TMP_Text _valueType = null;
     [SerializeField] private TMP_Text _errorTxt = null;
 
     [SerializeField] private TMP_InputField _inputName = null;

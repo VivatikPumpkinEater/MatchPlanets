@@ -13,7 +13,14 @@ public class AdsInitialization : MonoBehaviour, IAppodealInitializationListener
         string appKey = "cfc0450e92bdfbcf1f93c0978d09c4eb1987a22d7f47747f";
         Appodeal.initialize(appKey, adTypes);
         
-        //Appodeal.setTesting(true);
+        Appodeal.setTesting(true);
+
+        Appodeal.setUseSafeArea(true);
+        
+        if (EndGame.Instance)
+        {
+            EndGame.Instance.InitAdsCallback();
+        }
     }
 
     public void onInitializationFinished(List<string> errors)

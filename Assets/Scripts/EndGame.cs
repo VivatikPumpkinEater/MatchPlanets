@@ -40,6 +40,11 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
         Instance = this;
     }
 
+    public void InitAdsCallback()
+    {
+        Appodeal.setRewardedVideoCallbacks(this);
+    }
+
     public void FinishedLvl(FinishType type)
     {
         _finishType = type;
@@ -73,6 +78,9 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
                 ShowLosePanel();
                 break;
         }
+        
+        StopCoroutine(_coroutine);
+        _coroutine = null;
     }
 
     private void ShowWinPanel()
@@ -129,14 +137,21 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
 
     private void ShowRewardVideo()
     {
-        Appodeal.show(Appodeal.REWARDED_VIDEO);
+        if(Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)) {
+            Appodeal.show(Appodeal.REWARDED_VIDEO);	
+        }
+        else
+        {
+            _showAds.interactable = false;
+        }
     }
 
     public void onRewardedVideoLoaded(bool isPrecache)
     {
-        _showAds.GetComponentInChildren<TMP_Text>().text = "SHOW REWARDED VIDEO";
         Debug.Log("onRewardedVideoLoaded");
         Debug.Log($"getPredictedEcpm(): {Appodeal.getPredictedEcpm(Appodeal.REWARDED_VIDEO)}");
+        
+        
     }
 
     public void onRewardedVideoFailedToLoad()
@@ -156,8 +171,8 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
 
     public void onRewardedVideoClosed(bool finished)
     {
-        _showAds.GetComponentInChildren<TMP_Text>().text = "CACHE REWARDED VIDEO";
         Debug.Log($"onRewardedVideoClosed. Finished - {finished}");
+        
     }
 
     public void onRewardedVideoFinished(double amount, string name)

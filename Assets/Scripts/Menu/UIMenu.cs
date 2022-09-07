@@ -18,6 +18,8 @@ public class UIMenu : MonoBehaviour
     [SerializeField] private Button _closeDevPanel = null;
     [SerializeField] private Button _back = null;
 
+    [SerializeField] private GyroscopeController[] _gyroscopeControllers = new GyroscopeController[] { };
+
     private Camera _camera = null;
     private Vector3 _screenSize;
 
@@ -30,7 +32,7 @@ public class UIMenu : MonoBehaviour
         _camera = Camera.main;
         _screenSize = new Vector3(_camera.pixelWidth, _camera.pixelHeight, 0);
 
-        _lvlScreenDefaultPosition = new Vector2(_screenSize.x / 2, _screenSize.y * 1.5f);
+        _lvlScreenDefaultPosition = new Vector2(_screenSize.x / 2, _screenSize.y * 4.5f);
 
         _startScreenSecondPosition = _lvlScreenDefaultPosition;
         _startScreenSecondPosition.y *= -1;
@@ -48,14 +50,38 @@ public class UIMenu : MonoBehaviour
 
     private void ShowLvls()
     {
+        foreach (var gyroscopeController in _gyroscopeControllers)
+        {
+            gyroscopeController.Speed = -250;
+            gyroscopeController.Moving = true;
+        }
+        
         _startScreen.transform.DOMove(_startScreenSecondPosition, 0.5f);
-        _lvlScreen.transform.DOMove(_center, 0.5f);
+        _lvlScreen.transform.DOMove(_center, 1f).OnComplete(() =>
+        {
+            foreach (var gyroscopeController in _gyroscopeControllers)
+            {
+                gyroscopeController.Moving = false;
+            }
+        });
     }
 
     private void ShowStartScreen()
     {
+        foreach (var gyroscopeController in _gyroscopeControllers)
+        {
+            gyroscopeController.Speed = 250;
+            gyroscopeController.Moving = true;
+        }
+        
         _startScreen.transform.DOMove(_center, 0.5f);
-        _lvlScreen.transform.DOMove(_lvlScreenDefaultPosition, 0.5f);
+        _lvlScreen.transform.DOMove(_lvlScreenDefaultPosition, 0.5f).OnComplete(() =>
+        {
+            foreach (var gyroscopeController in _gyroscopeControllers)
+            {
+                gyroscopeController.Moving = false;
+            }
+        });
     }
 
     private void ShowSettings()
