@@ -14,6 +14,8 @@ public class LvlItemUI : MonoBehaviour
 
     [SerializeField] private Button _button = null;
 
+    [SerializeField] private Animator _animator = null;
+
     private LvlData _lvlData = new LvlData();
 
     private LevelInfo _levelInfo = null;
@@ -37,6 +39,12 @@ public class LvlItemUI : MonoBehaviour
         _lvlData = lvlData;
         
         _button.interactable = lvlData.LevelUnlock;
+        _animator.enabled = lvlData.LevelUnlock;
+
+        if (!_button.interactable)
+        {
+            _button.transition = Selectable.Transition.ColorTint;
+        }
     }
 
     public void ActivateStar(int count)

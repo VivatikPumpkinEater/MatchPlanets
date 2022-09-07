@@ -7,8 +7,6 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class Token : MonoBehaviour
 {
-    [SerializeField] protected GameObject _outline = null;
-
     //public const int POINTS = 40;
     public SpriteRenderer SpriteRenderer => _spriteRenderer = _spriteRenderer ?? GetComponent<SpriteRenderer>();
     public Bonus Bonus { get; set; } = null;
