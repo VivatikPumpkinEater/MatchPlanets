@@ -143,7 +143,7 @@ public class GameController : MonoBehaviour
 
         foreach (var token in tokens)
         {
-            if (_fields.ContainsKey(token.transform.position) && _fields[token.transform.position].ActualToken)
+            if (token && _fields.ContainsKey(token.transform.position) && _fields[token.transform.position].ActualToken)
             {
                 AudioManager.Instance.GetEffect("TokenDestroy");
 
