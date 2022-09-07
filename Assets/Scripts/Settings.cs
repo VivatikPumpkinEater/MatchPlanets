@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,8 @@ public class Settings : MonoBehaviour
     [SerializeField] private Slider _musicSlider = null;
     [SerializeField] private Slider _soundSlider = null;
 
+    [SerializeField] private Button _vibroButton = null;
+    
     [SerializeField] private Button _closeButton = null;
 
     [SerializeField] private Sprite[] _musicIcons = new Sprite[] { };
@@ -27,6 +30,9 @@ public class Settings : MonoBehaviour
     private float _lastMusicValue = 0f;
     private float _lastSoundValue = 0f;
 
+    private TMP_Text _vibroStatus = null;
+    private bool _vibro = true;
+    
     private void Start()
     {
         _audioManager = AudioManager.Instance;
@@ -47,6 +53,10 @@ public class Settings : MonoBehaviour
 
         _musicSlider.value = AudioManager.Instance.CurrentMusicVolume;
         _soundSlider.value = AudioManager.Instance.CurrentSoundVolume;
+        
+        _vibroButton.onClick.AddListener(ChangeVibrationStatus);
+        _vibroStatus = _vibroButton.GetComponentInChildren<TMP_Text>();
+        UpdateVibroButton();
     }
 
     private void CloseSettings()
@@ -85,6 +95,26 @@ public class Settings : MonoBehaviour
         {
             _muteSound = false;
             _soundButton.image.sprite = _soundIcons[1];
+        }
+    }
+
+    private void ChangeVibrationStatus()
+    {
+        VibrationManager.Instance.VibrationAccess();
+        
+        UpdateVibroButton();
+    }
+
+    private void UpdateVibroButton()
+    {
+        switch (VibrationManager.Instance.Vibration)
+        {
+            case true:
+                _vibroStatus.text = "Vibro on";
+                break;
+            case false:
+                _vibroStatus.text = "Vibro off";
+                break;
         }
     }
 }

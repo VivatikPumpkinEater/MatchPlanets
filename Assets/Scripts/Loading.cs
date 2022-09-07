@@ -103,8 +103,8 @@ public class Loading : MonoBehaviour
 
     public void UpdateLvlData()
     {
-        Debug.Log(_lvlsData.LvlsData[_currentLvlNumber - 1].Name);
-
+        Debug.Log("Update lvl data");
+        
         var lvlData = _lvlsData.LvlsData[_currentLvlNumber - 1];
         lvlData.LevelPassed = true;
 

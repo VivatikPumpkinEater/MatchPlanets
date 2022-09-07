@@ -78,9 +78,14 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
                 ShowLosePanel();
                 break;
         }
-        
-        StopCoroutine(_coroutine);
-        _coroutine = null;
+
+        yield return new WaitForSeconds(1f);
+
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
     }
 
     private void ShowWinPanel()

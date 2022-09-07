@@ -93,6 +93,9 @@ public class LineController : MonoBehaviour
             {
                 if (!_tokensInChain.Contains(token))
                 {
+                    VibrationManager.Instance.GetVibration(VibrationType.Pop);
+                    AudioManager.Instance.GetEffect("AddToken");
+                    
                     if (_tokensInChain.Count < 1)
                     {
                         _line.SetPosition(_line.positionCount++, position);
@@ -121,6 +124,8 @@ public class LineController : MonoBehaviour
                 else if (_line.positionCount >= 2 &&
                          token.transform.position == _line.GetPosition(_line.positionCount - 2))
                 {
+                    AudioManager.Instance.GetEffect("MinusToken");
+                    
                     UnSelected(_tokensInChain[^1].transform);
 
                     if (_tokensInChain[^1].Bonus)
