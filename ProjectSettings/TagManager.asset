@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - SpawnPoint
+  - Loading
   layers:
   - Default
   - TransparentFX
@@ -38,6 +40,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Field
+    uniqueID: 1359598477
+    locked: 0
+  - name: MenuBG
+    uniqueID: 1086174779
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: GUI
+    uniqueID: 3443304713
     locked: 0
