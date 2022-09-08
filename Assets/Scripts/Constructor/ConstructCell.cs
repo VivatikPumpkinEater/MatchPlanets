@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ConstructCell : MonoBehaviour
@@ -17,7 +14,7 @@ public class ConstructCell : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if(FSM.Game)
+        if(FSM.Status == GameStatus.Game)
         {
             if (Cell == null && !_fieldConstructor.Delete && !_fieldConstructor.SpawnPoint)
             {

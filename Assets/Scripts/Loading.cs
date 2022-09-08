@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +11,9 @@ public class Loading : MonoBehaviour
     public static Loading Instance = null;
 
     public int CurrentStars { get; set; } = 0;
+
+    private static readonly int Start = Animator.StringToHash("Start");
+    private static readonly int End = Animator.StringToHash("End");
     
     private int _currentLvlNumber = 0;
     private LvlData _currentLvlData;
@@ -35,8 +36,6 @@ public class Loading : MonoBehaviour
         _currentLvlNumber = lvlNumber;
         _currentLvlData = lvlData;
 
-        //_loading.gameObject.transform.position = position;
-
         Load(lvlData);
     }
 
@@ -46,7 +45,7 @@ public class Loading : MonoBehaviour
         {
             _loading = GetComponentInChildren<Animator>();
         }
-        _loading.SetTrigger("Start");
+        _loading.SetTrigger(Start);
 
         if (_loadingCoroutine != null)
         {
@@ -60,7 +59,7 @@ public class Loading : MonoBehaviour
     public void LoadNextLvl()
     {
 
-        _loading.SetTrigger("Start");
+        _loading.SetTrigger(Start);
 
         if (_loadingCoroutine != null)
         {
@@ -90,7 +89,7 @@ public class Loading : MonoBehaviour
 
     public void Load(int scene)
     {
-        _loading.SetTrigger("Start");
+        _loading.SetTrigger(Start);
 
         if (_loadingCoroutine != null)
         {
@@ -141,7 +140,7 @@ public class Loading : MonoBehaviour
 
         AudioManager.Instance.SetBGMusic("Game");
 
-        _loading.SetTrigger("End");
+        _loading.SetTrigger(End);
 
         FindObjectOfType<LoadLvl>().Load(lvlData);
     }
@@ -157,6 +156,6 @@ public class Loading : MonoBehaviour
             yield return null;
         }
 
-        _loading.SetTrigger("End");
+        _loading.SetTrigger(End);
     }
 }

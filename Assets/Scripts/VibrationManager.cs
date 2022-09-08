@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class VibrationManager : MonoBehaviour
@@ -19,6 +18,15 @@ public class VibrationManager : MonoBehaviour
         Instance = this;
 
         global::Vibration.Init();
+        InitVibro();
+    }
+
+    private void InitVibro()
+    {
+        if (PlayerPrefs.HasKey("VibroStatus"))
+        {
+            Vibration = Boolean.Parse(PlayerPrefs.GetString("VibroStatus"));
+        }
     }
 
     public void VibrationAccess()
@@ -48,6 +56,11 @@ public class VibrationManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetString("VibroStatus", Vibration.ToString());
     }
 }
 

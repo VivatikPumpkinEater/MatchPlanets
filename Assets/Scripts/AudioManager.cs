@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -27,7 +26,21 @@ public class AudioManager : MonoBehaviour
 
         Instance = this;
         
+        InitVolume();
         SetBGMusic("Menu");
+    }
+    
+    private void InitVolume()
+    {
+        if (PlayerPrefs.HasKey("MusicVolume"))
+        {
+            CurrentMusicVolume = PlayerPrefs.GetFloat("MusicVolume");
+        }
+
+        if (PlayerPrefs.HasKey("SoundVolume"))
+        {
+            CurrentSoundVolume = PlayerPrefs.GetFloat("SoundVolume");
+        }
     }
     
     public void VolumeMusic(float volume)
@@ -72,6 +85,12 @@ public class AudioManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetFloat("MusicVolume", CurrentMusicVolume);
+        PlayerPrefs.SetFloat("SoundVolume", CurrentSoundVolume);
     }
 }
 [Serializable]

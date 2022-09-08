@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -27,6 +26,8 @@ public class GameController : MonoBehaviour
     public List<Token> Tokens => _tokens;
 
     private List<Token> _tokens = new List<Token>();
+
+    private TokenMove _tokenMove;
 
     private Dictionary<Vector3, CellInfo> _fields = new Dictionary<Vector3, CellInfo>();
     private List<Vector3> _spawnPoints = new List<Vector3>();
@@ -153,9 +154,9 @@ public class GameController : MonoBehaviour
 
                 _effectsPool.GetFreeElement(token.transform.position);
 
-                var checkNeigthbor = CheckNeighbours(token.transform.position);
+                var checkNeighbours = CheckNeighbours(token.transform.position);
 
-                foreach (var token1 in checkNeigthbor)
+                foreach (var token1 in checkNeighbours)
                 {
                     DestroyTokens(token1);
                 }
@@ -320,80 +321,79 @@ public class GameController : MonoBehaviour
 
     private TokenMove SearchToken(Vector3 start)
     {
-        TokenMove tokenMove = new TokenMove();
+        _tokenMove = new TokenMove();
 
         for (int y = 1; y < 12; y++)
         {
             Vector3 tokenPos = start + Vector3.up * y;
 
-            if (_fields.ContainsKey(tokenPos) && _fields[tokenPos].ActualToken)
-            {
-                if (_fields[tokenPos].ActualToken.GetType().ToString() == "Ice")
-                {
-                    break;
-                }
-
-                tokenMove.Token = _fields[tokenPos].ActualToken;
-                tokenMove.startPosition = _fields[tokenPos].transform.position;
-                tokenMove.endPosition = start;
-                tokenMove.Iteration = y;
-
-                return tokenMove;
-            }
-            else if (!_fields.ContainsKey(tokenPos))
+            if ((_fields.ContainsKey(tokenPos) && _fields[tokenPos].ActualToken &&
+                 _fields[tokenPos].ActualToken.Type.Equals(TokenType.Ice)) || !_fields.ContainsKey(tokenPos))
             {
                 break;
+            }
+            else
+            {
+                if (SearchHelper(tokenPos, start, y))
+                {
+                    return _tokenMove;
+                }
             }
         }
 
         for (int i = 0; i < 2; i++)
         {
-            Vector3 tokenPos;
+            Vector3 tokenPos = Vector3.positiveInfinity;
 
             switch (i)
             {
                 case 0:
                     tokenPos = start + Vector3.up + Vector3.left;
-
-                    if (_fields.ContainsKey(tokenPos) && _fields[tokenPos].ActualToken)
-                    {
-                        if (_fields[tokenPos].ActualToken.GetType().ToString() == "Ice")
-                        {
-                            break;
-                        }
-
-                        tokenMove.Token = _fields[tokenPos].ActualToken;
-                        tokenMove.startPosition = _fields[tokenPos].transform.position;
-                        tokenMove.endPosition = start;
-                        tokenMove.Iteration = 1;
-
-                        return tokenMove;
-                    }
-
                     break;
                 case 1:
                     tokenPos = start + Vector3.up + Vector3.right;
-
-                    if (_fields.ContainsKey(tokenPos) && _fields[tokenPos].ActualToken)
-                    {
-                        if (_fields[tokenPos].ActualToken.GetType().ToString() == "Ice")
-                        {
-                            break;
-                        }
-
-                        tokenMove.Token = _fields[tokenPos].ActualToken;
-                        tokenMove.startPosition = _fields[tokenPos].transform.position;
-                        tokenMove.endPosition = start;
-                        tokenMove.Iteration = 1;
-
-                        return tokenMove;
-                    }
-
                     break;
+            }
+            
+            if (SearchHelper(tokenPos, start))
+            {
+                return _tokenMove;
             }
         }
 
-        return tokenMove;
+        return _tokenMove;
+    }
+
+    private bool SearchHelper(Vector3 tokenPos, Vector3 start)
+    {
+        if (_fields.ContainsKey(tokenPos) && _fields[tokenPos].ActualToken)
+        {
+            if (_fields[tokenPos].ActualToken.Type.Equals(TokenType.Ice))
+            {
+                return false;
+            }
+
+            _tokenMove.Token = _fields[tokenPos].ActualToken;
+            _tokenMove.startPosition = _fields[tokenPos].transform.position;
+            _tokenMove.endPosition = start;
+            _tokenMove.Iteration = 1;
+
+            return true;
+        }
+
+        return false;
+    }
+    
+    private bool SearchHelper(Vector3 tokenPos, Vector3 start, int iteration)
+    {
+        if (SearchHelper(tokenPos, start))
+        {
+            _tokenMove.Iteration = iteration;
+
+            return true;
+        }
+
+        return false;
     }
 
     private List<Token> CheckNeighbours(Vector3 start)
@@ -409,8 +409,8 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < checkPosition.Length; i++)
         {
             if (_fields.ContainsKey(checkPosition[i]) && _fields[checkPosition[i]].ActualToken && (
-                    _fields[checkPosition[i]].ActualToken.GetType().ToString() == "Ice" ||
-                    _fields[checkPosition[i]].ActualToken.GetType().ToString() == "Rock"))
+                    _fields[checkPosition[i]].ActualToken.Type.Equals(TokenType.Ice) ||
+                    _fields[checkPosition[i]].ActualToken.Type.Equals(TokenType.Rock)))
             {
                 tokensToDestroy.Add(_fields[checkPosition[i]].ActualToken);
             }

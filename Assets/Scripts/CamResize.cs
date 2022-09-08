@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CamResize : MonoBehaviour
@@ -16,7 +13,7 @@ public class CamResize : MonoBehaviour
     {
         float refAspect = _refResolution.x / _refResolution.y;
         float scaleMultiplier = refAspect / Camera.main.aspect;
-        float newSize = Camera.main.orthographicSize * scaleMultiplier;
+        float newSize = Camera.main.orthographicSize * scaleMultiplier + 1f;
 
         Camera.main.orthographicSize = newSize;
     }

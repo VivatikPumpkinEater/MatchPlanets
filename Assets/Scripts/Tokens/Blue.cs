@@ -1,9 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
+using System;
 
 public class Blue : Token
 {
+    private void Awake()
+    {
+        Type = TokenType.Blue;
+    }
+
     protected override void OnMouseDown()
     {
         base.OnMouseDown();

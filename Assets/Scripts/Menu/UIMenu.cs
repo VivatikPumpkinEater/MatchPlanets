@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,11 +6,12 @@ public class UIMenu : MonoBehaviour
 {
     [Header("Screens")] [SerializeField] private Transform _startScreen = null;
     [SerializeField] private Transform _lvlScreen = null;
-    [SerializeField] private Settings _settingsScreen = null;
+    [SerializeField] private GameObject _settingsScreen = null;
     [SerializeField] private GameObject _developPanel = null;
 
     [Header("Buttons")] [SerializeField] private Button _play = null;
     [SerializeField] private Button _settings = null;
+    [SerializeField] private Button _closeSettings = null;
     [SerializeField] private Button _devPanel = null;
     [SerializeField] private Button _closeDevPanel = null;
     [SerializeField] private Button _back = null;
@@ -42,6 +40,7 @@ public class UIMenu : MonoBehaviour
         _play.onClick.AddListener(ShowLvls);
         _back.onClick.AddListener(ShowStartScreen);
         _settings.onClick.AddListener(ShowSettings);
+        _closeSettings.onClick.AddListener(CloseSettings);
         _devPanel.onClick.AddListener(ShowDevelopPanel);
         _closeDevPanel.onClick.AddListener(CloseDevelopPanel);
     }
@@ -64,8 +63,6 @@ public class UIMenu : MonoBehaviour
         _settingsScreen.gameObject.SetActive(true);
         _settingsScreen.transform.localScale = Vector3.zero;
         _settingsScreen.transform.DOScale(Vector3.one, 0.3f);
-
-        _settingsScreen.CloseSettingsScreen += CloseSettings;
     }
     
     private void ShowDevelopPanel()
@@ -77,8 +74,6 @@ public class UIMenu : MonoBehaviour
 
     private void CloseSettings()
     {
-        _settingsScreen.CloseSettingsScreen -= CloseSettings;
-
         _settingsScreen.transform.DOScale(Vector3.zero, 0.3f)
             .OnComplete(() => _settingsScreen.gameObject.SetActive(false));
     }

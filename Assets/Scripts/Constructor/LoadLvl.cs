@@ -1,11 +1,9 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LoadLvl : MonoBehaviour
 {
-    [SerializeField] private LvlsConstruct lvlsConstruct = null;
+    [SerializeField] private LvlsConstruct _lvlsConstruct = null;
 
     [SerializeField] private CellInfo _cellPrefab = null;
 
@@ -14,7 +12,7 @@ public class LoadLvl : MonoBehaviour
     public System.Action<Dictionary<Vector3, CellInfo>, List<Vector3>, int> LvlField;
     public System.Action<Dictionary<Vector3, CellInfo>, List<Vector3>, int, int> LvlFieldWithPoints;
     public System.Action<Dictionary<Vector3, CellInfo>, List<Vector3>, List<TokenTarget>, int> LvlFieldWithTokens;
-    public System.Action<int> StepCount;
+    public System.Action<int> StepsLoadedEvent;
     
     private Dictionary<string, Token> _tokensType = new Dictionary<string, Token>();
 
@@ -36,7 +34,7 @@ public class LoadLvl : MonoBehaviour
         Dictionary<Vector3, CellInfo> field = new Dictionary<Vector3, CellInfo>();
         List<Vector3> spawnPoints = new List<Vector3>();
 
-        foreach (var cellData in lvlsConstruct.LvlsData[numberLvl].Field)
+        foreach (var cellData in _lvlsConstruct.LvlsData[numberLvl].Field)
         {
             var cell = Instantiate(_cellPrefab, cellData.Position, Quaternion.identity);
 
@@ -52,13 +50,13 @@ public class LoadLvl : MonoBehaviour
             field.Add(cell.transform.position, cell);
         }
 
-        foreach (var spawnPoint in lvlsConstruct.LvlsData[numberLvl].SpawnPoints)
+        foreach (var spawnPoint in _lvlsConstruct.LvlsData[numberLvl].SpawnPoints)
         {
             spawnPoints.Add(spawnPoint);
         }
 
-        LvlField?.Invoke(field, spawnPoints, lvlsConstruct.LvlsData[numberLvl].ScoreForStars);
-        StepCount?.Invoke(lvlsConstruct.LvlsData[numberLvl].StepCount);
+        LvlField?.Invoke(field, spawnPoints, _lvlsConstruct.LvlsData[numberLvl].ScoreForStars);
+        StepsLoadedEvent?.Invoke(_lvlsConstruct.LvlsData[numberLvl].StepCount);
     }
 
     public void Load(LvlData lvlData)
@@ -100,7 +98,7 @@ public class LoadLvl : MonoBehaviour
                 break;
         }
 
-        StepCount?.Invoke(lvlData.StepCount);
+        StepsLoadedEvent?.Invoke(lvlData.StepCount);
     }
 
     private Token ExtractToken(string type)

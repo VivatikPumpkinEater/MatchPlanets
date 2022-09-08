@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Rock : Token
@@ -8,6 +6,11 @@ public class Rock : Token
 
     [SerializeField] private int _hp = 1;
 
+    private void Awake()
+    {
+        Type = TokenType.Rock;
+    }
+    
     protected override void Start()
     {
         base.Start();

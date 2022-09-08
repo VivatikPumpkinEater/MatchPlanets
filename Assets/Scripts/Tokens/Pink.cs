@@ -1,9 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class Pink : Token
 {
+    private void Awake()
+    {
+        Type = TokenType.Pink;
+    }
+    
     protected override void OnMouseDown()
     {
         base.OnMouseDown();

@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using AppodealAds.Unity.Common;
 using AppodealAds.Unity.Api;
 using DG.Tweening;
@@ -57,10 +55,11 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
 
     private IEnumerator WaitEndSteps()
     {
-        while (FSM.Wait)
+        while (FSM.Status == GameStatus.Wait)
         {
             yield return null;
         }
+        
         FSM.SetGameStatus(GameStatus.EndLvl);
         
         _endPanel.SetActive(true);

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,11 +25,11 @@ public class Settings : MonoBehaviour
     private bool _muteMusic = false;
     private bool _muteSound = false;
 
-    private float _lastMusicValue = 0f;
-    private float _lastSoundValue = 0f;
-
     private TMP_Text _vibroStatus = null;
     private bool _vibro = true;
+
+    private const string vibroOn = "Vibro On";
+    private const string vibroOff = "Vibro Off";
     
     private void Start()
     {
@@ -45,11 +43,8 @@ public class Settings : MonoBehaviour
         if (!_audioManager) return;
 
         _musicSlider.onValueChanged.AddListener(ChangeMusicValue);
-        _lastMusicValue = _musicSlider.value;
 
         _soundSlider.onValueChanged.AddListener(ChangeSoundValue);
-
-        _lastSoundValue = _soundSlider.value;
 
         _musicSlider.value = AudioManager.Instance.CurrentMusicVolume;
         _soundSlider.value = AudioManager.Instance.CurrentSoundVolume;
@@ -110,10 +105,10 @@ public class Settings : MonoBehaviour
         switch (VibrationManager.Instance.Vibration)
         {
             case true:
-                _vibroStatus.text = "Vibro on";
+                _vibroStatus.text = vibroOn;
                 break;
             case false:
-                _vibroStatus.text = "Vibro off";
+                _vibroStatus.text = vibroOff;
                 break;
         }
     }

@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LineController : MonoBehaviour
@@ -15,7 +12,7 @@ public class LineController : MonoBehaviour
     public bool InProgress { get; private set; } = false;
 
     public System.Action<Token[]> TokenToDestroy;
-    public System.Action<Token> ActualTokenType;
+    public System.Action<TokenType> ActualTokenTypeEvent;
     public System.Action EndStep;
 
     private List<Token> _tokensInChain = new List<Token>();
@@ -25,7 +22,7 @@ public class LineController : MonoBehaviour
 
     private Dictionary<string, Bonus> _bonusData = new Dictionary<string, Bonus>();
 
-    private Token _actualType = null;
+    private TokenType _actualType;
 
     private int _frameStep = 0;
     private float _fpsCounter = 0;
@@ -78,18 +75,18 @@ public class LineController : MonoBehaviour
 
     public void AddPosition(Vector3 position, Token token)
     {
-        if (FSM.Game)
+        if (FSM.Status == GameStatus.Game)
         {
             if (_line.positionCount == 0)
             {
                 InProgress = true;
 
-                _actualType = token;
+                _actualType = token.Type;
 
-                ActualTokenType?.Invoke(_actualType);
+                ActualTokenTypeEvent?.Invoke(_actualType);
             }
 
-            if (token.GetType() == _actualType.GetType())
+            if (token.Type.Equals(_actualType))
             {
                 if (!_tokensInChain.Contains(token))
                 {
@@ -143,7 +140,7 @@ public class LineController : MonoBehaviour
 
     public void ClearLine()
     {
-        if (FSM.Game)
+        if (FSM.Status == GameStatus.Game)
         {
             InProgress = false;
 
@@ -162,9 +159,9 @@ public class LineController : MonoBehaviour
 
             _tokensInChain.Clear();
 
-            _actualType = null;
+            _actualType = TokenType.Null;
 
-            ActualTokenType?.Invoke(_actualType);
+            ActualTokenTypeEvent?.Invoke(_actualType);
         }
     }
 
