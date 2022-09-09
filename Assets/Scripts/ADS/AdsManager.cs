@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using AppodealAds.Unity.Common;
 using AppodealAds.Unity.Api;

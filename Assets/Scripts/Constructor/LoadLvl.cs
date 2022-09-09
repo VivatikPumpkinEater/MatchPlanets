@@ -29,8 +29,8 @@ public class LoadLvl : MonoBehaviour
     
     public void Load(LvlData lvlData)
     {
-        Dictionary<Vector3, CellInfo> field = new Dictionary<Vector3, CellInfo>();
-        List<Vector3> spawnPoints = new List<Vector3>();
+        var field = new Dictionary<Vector3, CellInfo>();
+        var spawnPoints = new List<Vector3>();
 
         foreach (var cellData in lvlData.Field)
         {
@@ -40,7 +40,6 @@ public class LoadLvl : MonoBehaviour
             {
                 var token = Instantiate(ExtractToken(cellData.TokenType), cell.transform);
                 token.Hp = cellData.TokenHp;
-                Debug.Log(token.Hp);
                 token.Init();
                 cell.ActualToken = token;
             }

@@ -155,7 +155,9 @@ public class Loading : MonoBehaviour
         {
             yield return null;
         }
-
+        
+        AudioManager.LoadBGMusic("Menu");
+        
         _loading.SetTrigger(End);
     }
 }

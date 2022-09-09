@@ -20,14 +20,14 @@ public class GyroscopeController : MonoBehaviour
 
         if (Mathf.Abs(transform.position.x) > 4.75)
         {
-            Vector3 posX = transform.position;
+            var posX = transform.position;
             posX.x = 0;
             transform.position = posX;
         }
 
         if (Mathf.Abs(transform.position.y) > 3)
         {
-            Vector3 posY = transform.position;
+            var posY = transform.position;
             posY.y = 0;
             transform.position = posY;
         }

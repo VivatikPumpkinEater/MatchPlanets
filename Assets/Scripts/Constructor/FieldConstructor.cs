@@ -159,7 +159,7 @@ public class FieldConstructor : MonoBehaviour
 
     private void CheckInputData()
     {
-        LvlData lvlData = new LvlData();
+        var lvlData = new LvlData();
 
         if (_inputName.text.Length == 0)
         {
@@ -218,11 +218,11 @@ public class FieldConstructor : MonoBehaviour
                         return;
                     }
 
-                    List<TokenTarget> tokenTargets = new List<TokenTarget>();
+                    var tokenTargets = new List<TokenTarget>();
                     
                     foreach (var constructItem in _tokensTargetInputScreen.ActiveObjects)
                     {
-                        TokenTarget tokenTarget = new TokenTarget();
+                        var tokenTarget = new TokenTarget();
                         
                         tokenTarget.Count = int.Parse(constructItem.TokenCount.text);
                         tokenTarget.Sprite = constructItem.SpriteToken;
@@ -300,8 +300,8 @@ public class FieldConstructor : MonoBehaviour
 
     private void Save(LvlData lvlData)
     {
-        List<CellData> field = new List<CellData>();
-        List<Vector3> spawnPoints = new List<Vector3>();
+        var field = new List<CellData>();
+        var spawnPoints = new List<Vector3>();
 
         foreach (var constructCell in _constructCells)
         {

@@ -90,9 +90,7 @@ public class LineController : MonoBehaviour
             {
                 if (!_tokensInChain.Contains(token))
                 {
-                    VibrationManager.GetVibration(VibrationType.Pop);
-                    AudioManager.LoadEffect("AddToken");
-                    
+
                     if (_tokensInChain.Count < 1)
                     {
                         _line.SetPosition(_line.positionCount++, position);
@@ -121,8 +119,6 @@ public class LineController : MonoBehaviour
                 else if (_line.positionCount >= 2 &&
                          token.transform.position == _line.GetPosition(_line.positionCount - 2))
                 {
-                    AudioManager.LoadEffect("MinusToken");
-                    
                     UnSelected(_tokensInChain[^1].transform);
 
                     if (_tokensInChain[^1].Bonus)
@@ -167,6 +163,9 @@ public class LineController : MonoBehaviour
 
     private void Selected(Transform select)
     {
+        VibrationManager.GetVibration(VibrationType.Pop);
+        AudioManager.LoadEffect("AddToken");
+        
         select.DOShakeScale(0.1f).OnComplete
         (
             () => select.DOScale(new Vector3(1.2f, 1.2f, 1f), 0.1f)
@@ -175,6 +174,7 @@ public class LineController : MonoBehaviour
 
     private void UnSelected(Transform unSelect)
     {
+        AudioManager.LoadEffect("MinusToken");
         unSelect.DOScale(Vector3.one, 0.2f);
     }
 

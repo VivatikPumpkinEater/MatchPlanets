@@ -18,7 +18,7 @@ public class DevOptions : MonoBehaviour
 
     private void UnlockLevels()
     {
-        List<LvlData> lvlDatas = new List<LvlData>();
+        var lvlDatas = new List<LvlData>();
         
         foreach (var lvlData in _lvlsConstruct.LvlsData)
         {
@@ -38,7 +38,7 @@ public class DevOptions : MonoBehaviour
 
     private void ResetLevels()
     {
-        List<LvlData> lvlDatas = new List<LvlData>();
+        var lvlDatas = new List<LvlData>();
         
         foreach (var lvlData in _lvlsConstruct.LvlsData)
         {

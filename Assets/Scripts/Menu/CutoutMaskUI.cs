@@ -8,7 +8,7 @@ public class CutoutMaskUI : Image
     {
         get
         {
-            Material material = new Material(base.materialForRendering);
+            var material = new Material(base.materialForRendering);
             material.SetInt("_StencilComp", (int)CompareFunction.NotEqual);
             return material;
         }

@@ -7,9 +7,9 @@ public class Bomb : Bonus
     
     public override List<Vector3> Activate()
     {
-        Vector3 start = transform.position - (Vector3.right * 2) - (Vector3.up * 2);
+        var start = transform.position - (Vector3.right * 2) - (Vector3.up * 2);
 
-        List<Vector3> toDestroy = new List<Vector3>();
+        var toDestroy = new List<Vector3>();
 
         for (int y = 0; y < RADIUS; y++)
         {

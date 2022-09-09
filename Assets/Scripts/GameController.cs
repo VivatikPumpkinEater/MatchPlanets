@@ -96,11 +96,11 @@ public class GameController : MonoBehaviour
 
     private void SpawnToken()
     {
-        List<Token> newTokens = new List<Token>();
+        var newTokens = new List<Token>();
 
         foreach (var spawnPoint in _spawnPoints)
         {
-            Vector3 position = spawnPoint + Vector3.down;
+            var position = spawnPoint + Vector3.down;
 
             if (_fields.ContainsKey(position))
             {
@@ -171,7 +171,7 @@ public class GameController : MonoBehaviour
                     {
                         if (_fields.ContainsKey(key) && _fields[key].ActualToken && !_fields[key].ActualToken.Bonus)
                         {
-                            Token tmp = _fields[key].ActualToken;
+                            var tmp = _fields[key].ActualToken;
 
                             DestroyTokens(tmp);
                         }
@@ -261,11 +261,11 @@ public class GameController : MonoBehaviour
 
             foreach (var key in _fields.Keys)
             {
-                CellInfo cell = _fields[key];
+                var cell = _fields[key];
 
                 if (!cell.ActualToken)
                 {
-                    TokenMove tokenMove = SearchToken(key);
+                    var tokenMove = SearchToken(key);
 
                     if (!tokenMove.Token)
                     {
@@ -314,7 +314,7 @@ public class GameController : MonoBehaviour
 
         for (int y = 1; y < 12; y++)
         {
-            Vector3 tokenPos = start + Vector3.up * y;
+            var tokenPos = start + Vector3.up * y;
 
             if ((_fields.ContainsKey(tokenPos) && _fields[tokenPos].ActualToken &&
                  _fields[tokenPos].ActualToken.Type.Equals(TokenType.Ice)) || !_fields.ContainsKey(tokenPos))
@@ -332,7 +332,7 @@ public class GameController : MonoBehaviour
 
         for (int i = 0; i < 2; i++)
         {
-            Vector3 tokenPos = Vector3.positiveInfinity;
+            var tokenPos = Vector3.positiveInfinity;
 
             switch (i)
             {
@@ -387,13 +387,13 @@ public class GameController : MonoBehaviour
 
     private List<Token> CheckNeighbours(Vector3 start)
     {
-        Vector3[] checkPosition = new Vector3[4];
+        var checkPosition = new Vector3[4];
         checkPosition[0] = start + Vector3.up;
         checkPosition[1] = start + Vector3.right;
         checkPosition[2] = start + Vector3.down;
         checkPosition[3] = start + Vector3.left;
 
-        List<Token> tokensToDestroy = new List<Token>();
+        var tokensToDestroy = new List<Token>();
 
         for (int i = 0; i < checkPosition.Length; i++)
         {

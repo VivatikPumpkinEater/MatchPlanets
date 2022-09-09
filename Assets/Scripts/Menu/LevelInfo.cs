@@ -31,7 +31,7 @@ public class LevelInfo : MonoBehaviour
         _tokensTargets = new List<GameObject>();
     }
 
-    public void SetUpLvlInfo(int lvlNumber, LvlData lvlData)
+    private void SetUpLvlInfo(int lvlNumber, LvlData lvlData)
     {
         _lvlNumber.text = lvlNumber.ToString();
         _lvlName.text = lvlData.Name;
