@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +11,9 @@ public class Loading : MonoBehaviour
     public static Loading Instance = null;
 
     public int CurrentStars { get; set; } = 0;
+
+    private static readonly int Start = Animator.StringToHash("Start");
+    private static readonly int End = Animator.StringToHash("End");
     
     private int _currentLvlNumber = 0;
     private LvlData _currentLvlData;
@@ -35,8 +36,6 @@ public class Loading : MonoBehaviour
         _currentLvlNumber = lvlNumber;
         _currentLvlData = lvlData;
 
-        //_loading.gameObject.transform.position = position;
-
         Load(lvlData);
     }
 
@@ -46,7 +45,7 @@ public class Loading : MonoBehaviour
         {
             _loading = GetComponentInChildren<Animator>();
         }
-        _loading.SetTrigger("Start");
+        _loading.SetTrigger(Start);
 
         if (_loadingCoroutine != null)
         {
@@ -60,7 +59,7 @@ public class Loading : MonoBehaviour
     public void LoadNextLvl()
     {
 
-        _loading.SetTrigger("Start");
+        _loading.SetTrigger(Start);
 
         if (_loadingCoroutine != null)
         {
@@ -70,7 +69,7 @@ public class Loading : MonoBehaviour
 
         if(_currentLvlNumber <= _lvlsData.LvlsData.Count - 1)
         {
-            LvlData lvlData = _lvlsData.LvlsData[_currentLvlNumber];
+            var lvlData = _lvlsData.LvlsData[_currentLvlNumber];
             _currentLvlData = lvlData;
             
             _loadingCoroutine = StartCoroutine(LoadingLvl(lvlData));
@@ -90,7 +89,7 @@ public class Loading : MonoBehaviour
 
     public void Load(int scene)
     {
-        _loading.SetTrigger("Start");
+        _loading.SetTrigger(Start);
 
         if (_loadingCoroutine != null)
         {
@@ -128,7 +127,7 @@ public class Loading : MonoBehaviour
     {
         CurrentStars = 0;
         
-        AudioManager.Instance.GetEffect("Loading");
+        AudioManager.LoadEffect("Loading");
         
         yield return new WaitForSeconds(2f);
 
@@ -139,9 +138,9 @@ public class Loading : MonoBehaviour
             yield return null;
         }
 
-        AudioManager.Instance.SetBGMusic("Game");
+        AudioManager.LoadBGMusic("Game");
 
-        _loading.SetTrigger("End");
+        _loading.SetTrigger(End);
 
         FindObjectOfType<LoadLvl>().Load(lvlData);
     }
@@ -156,7 +155,9 @@ public class Loading : MonoBehaviour
         {
             yield return null;
         }
-
-        _loading.SetTrigger("End");
+        
+        AudioManager.LoadBGMusic("Menu");
+        
+        _loading.SetTrigger(End);
     }
 }

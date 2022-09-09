@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LineController : MonoBehaviour
@@ -15,7 +12,7 @@ public class LineController : MonoBehaviour
     public bool InProgress { get; private set; } = false;
 
     public System.Action<Token[]> TokenToDestroy;
-    public System.Action<Token> ActualTokenType;
+    public System.Action<TokenType> ActualTokenTypeEvent;
     public System.Action EndStep;
 
     private List<Token> _tokensInChain = new List<Token>();
@@ -25,7 +22,7 @@ public class LineController : MonoBehaviour
 
     private Dictionary<string, Bonus> _bonusData = new Dictionary<string, Bonus>();
 
-    private Token _actualType = null;
+    private TokenType _actualType;
 
     private int _frameStep = 0;
     private float _fpsCounter = 0;
@@ -78,24 +75,22 @@ public class LineController : MonoBehaviour
 
     public void AddPosition(Vector3 position, Token token)
     {
-        if (FSM.Game)
+        if (FSM.Status == GameStatus.Game)
         {
             if (_line.positionCount == 0)
             {
                 InProgress = true;
 
-                _actualType = token;
+                _actualType = token.Type;
 
-                ActualTokenType?.Invoke(_actualType);
+                ActualTokenTypeEvent?.Invoke(_actualType);
             }
 
-            if (token.GetType() == _actualType.GetType())
+            if (token.Type.Equals(_actualType))
             {
                 if (!_tokensInChain.Contains(token))
                 {
-                    VibrationManager.Instance.GetVibration(VibrationType.Pop);
-                    AudioManager.Instance.GetEffect("AddToken");
-                    
+
                     if (_tokensInChain.Count < 1)
                     {
                         _line.SetPosition(_line.positionCount++, position);
@@ -124,8 +119,6 @@ public class LineController : MonoBehaviour
                 else if (_line.positionCount >= 2 &&
                          token.transform.position == _line.GetPosition(_line.positionCount - 2))
                 {
-                    AudioManager.Instance.GetEffect("MinusToken");
-                    
                     UnSelected(_tokensInChain[^1].transform);
 
                     if (_tokensInChain[^1].Bonus)
@@ -143,7 +136,7 @@ public class LineController : MonoBehaviour
 
     public void ClearLine()
     {
-        if (FSM.Game)
+        if (FSM.Status == GameStatus.Game)
         {
             InProgress = false;
 
@@ -162,14 +155,17 @@ public class LineController : MonoBehaviour
 
             _tokensInChain.Clear();
 
-            _actualType = null;
+            _actualType = TokenType.Null;
 
-            ActualTokenType?.Invoke(_actualType);
+            ActualTokenTypeEvent?.Invoke(_actualType);
         }
     }
 
     private void Selected(Transform select)
     {
+        VibrationManager.GetVibration(VibrationType.Pop);
+        AudioManager.LoadEffect("AddToken");
+        
         select.DOShakeScale(0.1f).OnComplete
         (
             () => select.DOScale(new Vector3(1.2f, 1.2f, 1f), 0.1f)
@@ -178,6 +174,7 @@ public class LineController : MonoBehaviour
 
     private void UnSelected(Transform unSelect)
     {
+        AudioManager.LoadEffect("MinusToken");
         unSelect.DOScale(Vector3.one, 0.2f);
     }
 

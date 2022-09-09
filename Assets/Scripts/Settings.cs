@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,59 +12,37 @@ public class Settings : MonoBehaviour
     [SerializeField] private Slider _soundSlider = null;
 
     [SerializeField] private Button _vibroButton = null;
+
+    [SerializeField] private Sprite[] _musicIcons;
+    [SerializeField] private Sprite[] _soundIcons;
     
-    [SerializeField] private Button _closeButton = null;
-
-    [SerializeField] private Sprite[] _musicIcons = new Sprite[] { };
-    [SerializeField] private Sprite[] _soundIcons = new Sprite[] { };
-    
-    public System.Action CloseSettingsScreen;
-
-    private AudioManager _audioManager = null;
-
     private bool _muteMusic = false;
     private bool _muteSound = false;
 
-    private float _lastMusicValue = 0f;
-    private float _lastSoundValue = 0f;
-
     private TMP_Text _vibroStatus = null;
     private bool _vibro = true;
+
+    private const string vibroOn = "Vibro On";
+    private const string vibroOff = "Vibro Off";
     
     private void Start()
     {
-        _audioManager = AudioManager.Instance;
-
-        if (_closeButton != null)
-        {
-            _closeButton.onClick.AddListener(CloseSettings);
-        }
-
-        if (!_audioManager) return;
-
         _musicSlider.onValueChanged.AddListener(ChangeMusicValue);
-        _lastMusicValue = _musicSlider.value;
 
         _soundSlider.onValueChanged.AddListener(ChangeSoundValue);
 
-        _lastSoundValue = _soundSlider.value;
-
-        _musicSlider.value = AudioManager.Instance.CurrentMusicVolume;
-        _soundSlider.value = AudioManager.Instance.CurrentSoundVolume;
+        _musicSlider.value = AudioManager.GetCurrentMusicVolume();
+        _soundSlider.value = AudioManager.GetCurrentSoundVolume();
         
         _vibroButton.onClick.AddListener(ChangeVibrationStatus);
         _vibroStatus = _vibroButton.GetComponentInChildren<TMP_Text>();
+        
         UpdateVibroButton();
-    }
-
-    private void CloseSettings()
-    {
-        CloseSettingsScreen?.Invoke();
     }
 
     private void ChangeMusicValue(float value)
     {
-        _audioManager.VolumeMusic(value);
+        AudioManager.ChangeMusicVolume(value);
 
         if (value == 0f)
         {
@@ -83,7 +59,7 @@ public class Settings : MonoBehaviour
 
     private void ChangeSoundValue(float value)
     {
-        _audioManager.VolumeEffect(value);
+        AudioManager.ChangeEffectsVolume(value);
 
         if (value == 0f)
         {
@@ -100,20 +76,20 @@ public class Settings : MonoBehaviour
 
     private void ChangeVibrationStatus()
     {
-        VibrationManager.Instance.VibrationAccess();
+        VibrationManager.ChangeVibrationStatus();
         
         UpdateVibroButton();
     }
 
     private void UpdateVibroButton()
     {
-        switch (VibrationManager.Instance.Vibration)
+        switch (VibrationManager.GetVibrationStatus())
         {
             case true:
-                _vibroStatus.text = "Vibro on";
+                _vibroStatus.text = vibroOn;
                 break;
             case false:
-                _vibroStatus.text = "Vibro off";
+                _vibroStatus.text = vibroOff;
                 break;
         }
     }

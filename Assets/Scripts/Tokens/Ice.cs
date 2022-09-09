@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Ice : Token
@@ -8,13 +6,23 @@ public class Ice : Token
 
     [SerializeField] private int _hp = 1;
 
+    private void Awake()
+    {
+        Type = TokenType.Ice;
+    }
+
     protected override void Start()
     {
         base.Start();
         
+        if(Hp < _hp)
+        {
+            Hp = _hp;
+        }
+
         SpriteRenderer.sprite = _lvls[_hp - 1];
     }
-    
+
     public override void Init()
     {
         _hp = Hp;
@@ -39,7 +47,7 @@ public class Ice : Token
     public override bool Destroy()
     {
         _hp--;
-        
+
         if (_hp > 0)
         {
             SpriteRenderer.sprite = _lvls[_hp - 1];

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -10,13 +7,13 @@ public class LvlItemUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text _lvlNumber = null;
 
-    [SerializeField] private GameObject[] _stars = new GameObject[] { };
+    [SerializeField] private GameObject[] _stars;
 
     [SerializeField] private Button _button = null;
 
     [SerializeField] private Animator _animator = null;
 
-    private LvlData _lvlData = new LvlData();
+    private LvlData _lvlData;
 
     private LevelInfo _levelInfo = null;
     private int _lvlNum;
@@ -26,7 +23,8 @@ public class LvlItemUI : MonoBehaviour
         {
             star.SetActive(false);
         }
-        
+
+        _lvlData = new LvlData();
         _button.onClick.AddListener(LoadLvl);
     }
 
@@ -57,12 +55,8 @@ public class LvlItemUI : MonoBehaviour
 
     private void LoadLvl()
     {
-        _levelInfo.gameObject.SetActive(true);
-        _levelInfo.transform.localScale = Vector3.zero;
+        UIManager.Open<LevelInfoWindow>();
         
         _levelInfo.SetUpLvlInfo(_lvlNum, _lvlData, _lvlData.Stars);
-        
-
-        _levelInfo.transform.DOScale(Vector3.one, 0.3f);
     }
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -47,7 +44,7 @@ public class PointsManager : MonoBehaviour
 
     public void AddedPoint(int points)
     {
-        AudioManager.Instance.GetEffect("Point");
+        AudioManager.LoadEffect("Point");
         _score += points;
         _scoreTxt.text = _score.ToString();
         _scoreTxt.gameObject.transform.DOShakeScale(0.5f).OnComplete(()=> _scoreTxt.gameObject.transform.DOScale(Vector3.one, 0.3f));
@@ -60,7 +57,6 @@ public class PointsManager : MonoBehaviour
             {
                 EndGame.Instance.FinishedLvl(FinishType.Win);
             }
-            //Debug.Log(_falingImage.fillAmount);
         }
 
         if(_currentStar < _stars.Length)

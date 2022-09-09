@@ -1,39 +1,62 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class VibrationManager : MonoBehaviour
 {
-    public static VibrationManager Instance = null;
+    private static VibrationManager _instance = null;
 
-    public bool Vibration { get; private set; } = true;
+    private bool _vibration = true;
 
     private void Awake()
     {
-        if (Instance != null)
+        if (_instance != null)
         {
             Destroy(gameObject);
             return;
         }
 
-        Instance = this;
+        _instance = this;
 
-        global::Vibration.Init();
+        Vibration.Init();
+        InitVibro();
     }
 
-    public void VibrationAccess()
+    private void InitVibro()
     {
-        Vibration = !Vibration;
+        if (PlayerPrefs.HasKey("VibroStatus"))
+        {
+            _vibration = Boolean.Parse(PlayerPrefs.GetString("VibroStatus"));
+        }
+    }
 
-        if (Vibration)
+    public static bool GetVibrationStatus()
+    {
+        return _instance._vibration;
+    }
+
+    public static void ChangeVibrationStatus()
+    {
+        _instance.VibrationAccess();
+    }
+    
+    public static void GetVibration(VibrationType vibrationType)
+    {
+        _instance.SearchVibration(vibrationType);
+    }
+    
+    private void VibrationAccess()
+    {
+        _vibration = !_vibration;
+
+        if (_vibration)
         {
             GetVibration(VibrationType.Peek);
         }
     }
 
-    public void GetVibration(VibrationType vibrationType)
+    private void SearchVibration(VibrationType vibrationType)
     {
-        if (Vibration)
+        if (_vibration)
         {
             switch (vibrationType)
             {
@@ -48,6 +71,11 @@ public class VibrationManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetString("VibroStatus", _vibration.ToString());
     }
 }
 
