@@ -29,53 +29,44 @@ public class GameController : MonoBehaviour
 
     private TokenMove _tokenMove;
 
-    private Dictionary<Vector3, CellInfo> _fields = new Dictionary<Vector3, CellInfo>();
-    private List<Vector3> _spawnPoints = new List<Vector3>();
+    private Dictionary<Vector3, CellInfo> _fields;
+    private List<Vector3> _spawnPoints;
 
     private bool _move = false;
     private bool _lvlTokenTarget = false;
 
     private void Awake()
     {
-        _fieldGenerator.LvlField += InitLvl;
-        _fieldGenerator.LvlFieldWithPoints += InitLvl;
-        _fieldGenerator.LvlFieldWithTokens += InitLvl;
+        _fieldGenerator.LvlLoadedEvent += InitLvl;
         _lineController.TokenToDestroy += tokens => StartCoroutine(DeleteToken(tokens));
     }
 
-    private void InitLvl(Dictionary<Vector3, CellInfo> field, List<Vector3> spawnPoints, int scoreTarget)
+    private void InitLvl(Dictionary<Vector3, CellInfo> field, List<Vector3> spawnPoints, LvlData lvlData)
     {
         _fields = field;
         _spawnPoints = spawnPoints;
 
-        _pointsManager.InitPerfectScore(scoreTarget);
-        //SpawnToken(_fields);
+        _pointsManager.InitPerfectScore(lvlData.ScoreForStars);
 
-        //StartCoroutine(Movement2());
+        switch (lvlData.LevelTarget)
+        {
+            case LevelTarget.Points:
+                _pointsManager.InitPointsTarget(lvlData.PointsTarget);
+                break;
+            case LevelTarget.Tokens:
+                _lvlTokenTarget = true;
+
+                var tokensTargets = lvlData.TokenTargets;
+                foreach (var tokenTarget in tokensTargets)
+                {
+                    _tokensTargetController.SetUpTargetsToken(tokenTarget.Type, tokenTarget.Sprite, tokenTarget.Count);
+                }
+                break;
+        }
 
         SpawnToken(field);
 
         FSM.SetGameStatus(GameStatus.Game);
-    }
-
-    private void InitLvl(Dictionary<Vector3, CellInfo> field, List<Vector3> spawnPoints, int pointsTarget,
-        int scoreTarget)
-    {
-        _pointsManager.InitPointsTarget(pointsTarget);
-        InitLvl(field, spawnPoints, scoreTarget);
-    }
-
-    private void InitLvl(Dictionary<Vector3, CellInfo> field, List<Vector3> spawnPoints, List<TokenTarget> tokenTargets,
-        int scoreTarget)
-    {
-        _lvlTokenTarget = true;
-
-        foreach (var tokenTarget in tokenTargets)
-        {
-            _tokensTargetController.SetUpTargetsToken(tokenTarget.Type, tokenTarget.Sprite, tokenTarget.Count);
-        }
-
-        InitLvl(field, spawnPoints, scoreTarget);
     }
 
     private void SpawnToken(Dictionary<Vector3, CellInfo> field)
@@ -146,7 +137,7 @@ public class GameController : MonoBehaviour
         {
             if (token && _fields.ContainsKey(token.transform.position) && _fields[token.transform.position].ActualToken)
             {
-                AudioManager.Instance.GetEffect("TokenDestroy");
+                AudioManager.LoadEffect("TokenDestroy");
 
                 _fields[token.transform.position].ActualToken = null;
 
@@ -168,11 +159,11 @@ public class GameController : MonoBehaviour
                     switch (token.Bonus.GetType().ToString())
                     {
                         case "Bomb":
-                            AudioManager.Instance.GetEffect("Boom");
+                            AudioManager.LoadEffect("Boom");
                             _ripplePostProcessor.RippleEffect(token.transform.position);
                             break;
                         case "Rocket":
-                            AudioManager.Instance.GetEffect("Rocket");
+                            AudioManager.LoadEffect("Rocket");
                             break;
                     }
 
@@ -211,8 +202,6 @@ public class GameController : MonoBehaviour
                 {
                     Destroy(token.gameObject);
                 }
-
-                //_emptyCells.Add(token.transform.position);
 
                 yield return new WaitForSecondsRealtime(_destroyTime);
             }

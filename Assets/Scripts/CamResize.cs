@@ -13,7 +13,7 @@ public class CamResize : MonoBehaviour
     {
         float refAspect = _refResolution.x / _refResolution.y;
         float scaleMultiplier = refAspect / Camera.main.aspect;
-        float newSize = Camera.main.orthographicSize * scaleMultiplier + 1f;
+        float newSize = Camera.main.orthographicSize * scaleMultiplier;
 
         Camera.main.orthographicSize = newSize;
     }

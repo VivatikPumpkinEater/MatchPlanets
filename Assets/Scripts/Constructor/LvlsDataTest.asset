@@ -225,8 +225,8 @@ MonoBehaviour:
     - {x: 6, y: 11, z: 0}
     ScoreForStars: 1000
     LevelUnlock: 1
-    LevelPassed: 1
-    Stars: 3
+    LevelPassed: 0
+    Stars: 0
     LevelTarget: 0
     PointsTarget: 1000
     TokenTargets: []
@@ -410,8 +410,8 @@ MonoBehaviour:
     - {x: 6, y: 11, z: 0}
     ScoreForStars: 2000
     LevelUnlock: 1
-    LevelPassed: 1
-    Stars: 3
+    LevelPassed: 0
+    Stars: 0
     LevelTarget: 0
     PointsTarget: 2500
     TokenTargets: []
@@ -585,8 +585,8 @@ MonoBehaviour:
     - {x: 3, y: 11, z: 0}
     ScoreForStars: 4000
     LevelUnlock: 1
-    LevelPassed: 1
-    Stars: 1
+    LevelPassed: 0
+    Stars: 0
     LevelTarget: 1
     PointsTarget: 0
     TokenTargets:
@@ -826,8 +826,8 @@ MonoBehaviour:
     - {x: 5, y: 11, z: 0}
     ScoreForStars: 6000
     LevelUnlock: 1
-    LevelPassed: 1
-    Stars: 3
+    LevelPassed: 0
+    Stars: 0
     LevelTarget: 1
     PointsTarget: 0
     TokenTargets:
@@ -984,196 +984,6 @@ MonoBehaviour:
     - Type: Blue
       Count: 15
       Sprite: {fileID: 21300000, guid: b033663ec01e36c45a63d48aeffdd92f, type: 3}
-  - Name: Robot
-    StepCount: 15
-    Field:
-    - Position: {x: 2, y: 0, z: 0}
-      TokenType: Rock
-      TokenHp: 1
-    - Position: {x: 3, y: 0, z: 0}
-      TokenType: Ice
-      TokenHp: 1
-    - Position: {x: 4, y: 0, z: 0}
-      TokenType: Rock
-      TokenHp: 1
-    - Position: {x: 1, y: 1, z: 0}
-      TokenType: Rock
-      TokenHp: 1
-    - Position: {x: 2, y: 1, z: 0}
-      TokenType: Ice
-      TokenHp: 1
-    - Position: {x: 3, y: 1, z: 0}
-      TokenType: Ice
-      TokenHp: 1
-    - Position: {x: 4, y: 1, z: 0}
-      TokenType: Ice
-      TokenHp: 1
-    - Position: {x: 5, y: 1, z: 0}
-      TokenType: Rock
-      TokenHp: 1
-    - Position: {x: 0, y: 2, z: 0}
-      TokenType: Rock
-      TokenHp: 1
-    - Position: {x: 1, y: 2, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 2, y: 2, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 3, y: 2, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 4, y: 2, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 5, y: 2, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 6, y: 2, z: 0}
-      TokenType: Rock
-      TokenHp: 1
-    - Position: {x: 1, y: 3, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 2, y: 3, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 3, y: 3, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 4, y: 3, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 5, y: 3, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 0, y: 4, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 1, y: 4, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 2, y: 4, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 3, y: 4, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 4, y: 4, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 5, y: 4, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 6, y: 4, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 1, y: 5, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 2, y: 5, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 3, y: 5, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 4, y: 5, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 5, y: 5, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 2, y: 6, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 3, y: 6, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 4, y: 6, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 1, y: 7, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 5, y: 7, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 0, y: 8, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 1, y: 8, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 2, y: 8, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 3, y: 8, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 4, y: 8, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 5, y: 8, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 6, y: 8, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 0, y: 9, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 1, y: 9, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 2, y: 9, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 3, y: 9, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 4, y: 9, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 5, y: 9, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 6, y: 9, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 1, y: 10, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 2, y: 10, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 3, y: 10, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 4, y: 10, z: 0}
-      TokenType: null
-      TokenHp: 0
-    - Position: {x: 5, y: 10, z: 0}
-      TokenType: null
-      TokenHp: 0
-    SpawnPoints:
-    - {x: 1, y: 11, z: 0}
-    - {x: 2, y: 11, z: 0}
-    - {x: 3, y: 11, z: 0}
-    - {x: 4, y: 11, z: 0}
-    - {x: 5, y: 11, z: 0}
-    ScoreForStars: 4500
-    LevelUnlock: 1
-    LevelPassed: 0
-    Stars: 0
-    LevelTarget: 1
-    PointsTarget: 0
-    TokenTargets:
-    - Type: Rock
-      Count: 12
-      Sprite: {fileID: 21300000, guid: 0044a75f7fc873141897654483ae2592, type: 3}
-    - Type: Ice
-      Count: 6
-      Sprite: {fileID: 21300000, guid: d835ec32acd77524ca7a05f43815054d, type: 3}
   - Name: Happy land
     StepCount: 18
     Field:
@@ -1387,7 +1197,7 @@ MonoBehaviour:
       TokenHp: 0
     - Position: {x: 6, y: 0, z: 0}
       TokenType: Rock
-      TokenHp: 1
+      TokenHp: 2
     - Position: {x: 0, y: 1, z: 0}
       TokenType: null
       TokenHp: 0
@@ -1408,7 +1218,7 @@ MonoBehaviour:
       TokenHp: 0
     - Position: {x: 6, y: 1, z: 0}
       TokenType: Rock
-      TokenHp: 1
+      TokenHp: 2
     - Position: {x: 1, y: 2, z: 0}
       TokenType: null
       TokenHp: 0
@@ -1426,7 +1236,7 @@ MonoBehaviour:
       TokenHp: 0
     - Position: {x: 6, y: 2, z: 0}
       TokenType: Rock
-      TokenHp: 1
+      TokenHp: 2
     - Position: {x: 2, y: 3, z: 0}
       TokenType: null
       TokenHp: 0
@@ -1438,7 +1248,7 @@ MonoBehaviour:
       TokenHp: 0
     - Position: {x: 6, y: 3, z: 0}
       TokenType: Rock
-      TokenHp: 1
+      TokenHp: 2
     - Position: {x: 1, y: 4, z: 0}
       TokenType: null
       TokenHp: 0
@@ -1450,7 +1260,7 @@ MonoBehaviour:
       TokenHp: 0
     - Position: {x: 6, y: 4, z: 0}
       TokenType: Rock
-      TokenHp: 1
+      TokenHp: 2
     - Position: {x: 0, y: 5, z: 0}
       TokenType: null
       TokenHp: 0
@@ -1462,7 +1272,7 @@ MonoBehaviour:
       TokenHp: 0
     - Position: {x: 6, y: 5, z: 0}
       TokenType: Rock
-      TokenHp: 1
+      TokenHp: 2
     - Position: {x: 0, y: 6, z: 0}
       TokenType: null
       TokenHp: 0
@@ -1474,7 +1284,7 @@ MonoBehaviour:
       TokenHp: 0
     - Position: {x: 6, y: 6, z: 0}
       TokenType: Rock
-      TokenHp: 1
+      TokenHp: 2
     - Position: {x: 1, y: 7, z: 0}
       TokenType: null
       TokenHp: 0
@@ -1486,7 +1296,7 @@ MonoBehaviour:
       TokenHp: 0
     - Position: {x: 6, y: 7, z: 0}
       TokenType: Rock
-      TokenHp: 1
+      TokenHp: 2
     - Position: {x: 2, y: 8, z: 0}
       TokenType: null
       TokenHp: 0
@@ -1498,7 +1308,7 @@ MonoBehaviour:
       TokenHp: 0
     - Position: {x: 6, y: 8, z: 0}
       TokenType: Rock
-      TokenHp: 1
+      TokenHp: 2
     - Position: {x: 3, y: 9, z: 0}
       TokenType: null
       TokenHp: 0
@@ -1518,7 +1328,7 @@ MonoBehaviour:
     - {x: 4, y: 11, z: 0}
     - {x: 5, y: 11, z: 0}
     ScoreForStars: 6000
-    LevelUnlock: 0
+    LevelUnlock: 1
     LevelPassed: 0
     Stars: 0
     LevelTarget: 1
@@ -1673,12 +1483,200 @@ MonoBehaviour:
     - {x: 4, y: 11, z: 0}
     - {x: 5, y: 11, z: 0}
     ScoreForStars: 5500
-    LevelUnlock: 0
+    LevelUnlock: 1
     LevelPassed: 0
     Stars: 0
     LevelTarget: 0
     PointsTarget: 5500
     TokenTargets: []
+  - Name: Golem
+    StepCount: 25
+    Field:
+    - Position: {x: 1, y: 0, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 5, y: 0, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 0, y: 1, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 1, y: 1, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 2, y: 1, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 3, y: 1, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 4, y: 1, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 5, y: 1, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 6, y: 1, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 0, y: 2, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 1, y: 2, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 2, y: 2, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 3, y: 2, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 4, y: 2, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 5, y: 2, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 6, y: 2, z: 0}
+      TokenType: Rock
+      TokenHp: 2
+    - Position: {x: 1, y: 3, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 2, y: 3, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 3, y: 3, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 4, y: 3, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 5, y: 3, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 1, y: 4, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 2, y: 4, z: 0}
+      TokenType: Ice
+      TokenHp: 2
+    - Position: {x: 3, y: 4, z: 0}
+      TokenType: Ice
+      TokenHp: 1
+    - Position: {x: 4, y: 4, z: 0}
+      TokenType: Ice
+      TokenHp: 2
+    - Position: {x: 5, y: 4, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 0, y: 5, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 2, y: 5, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 3, y: 5, z: 0}
+      TokenType: Ice
+      TokenHp: 2
+    - Position: {x: 4, y: 5, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 6, y: 5, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 0, y: 6, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 2, y: 6, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 3, y: 6, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 4, y: 6, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 6, y: 6, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 0, y: 7, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 1, y: 7, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 2, y: 7, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 3, y: 7, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 4, y: 7, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 5, y: 7, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 6, y: 7, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 1, y: 8, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 2, y: 8, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 3, y: 8, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 4, y: 8, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 5, y: 8, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 1, y: 9, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 2, y: 9, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 3, y: 9, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 4, y: 9, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 5, y: 9, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 2, y: 10, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 3, y: 10, z: 0}
+      TokenType: null
+      TokenHp: 0
+    - Position: {x: 4, y: 10, z: 0}
+      TokenType: null
+      TokenHp: 0
+    SpawnPoints:
+    - {x: 2, y: 11, z: 0}
+    - {x: 3, y: 11, z: 0}
+    - {x: 4, y: 11, z: 0}
+    ScoreForStars: 4500
+    LevelUnlock: 1
+    LevelPassed: 0
+    Stars: 0
+    LevelTarget: 1
+    PointsTarget: 0
+    TokenTargets:
+    - Type: Ice
+      Count: 7
+      Sprite: {fileID: 21300000, guid: d835ec32acd77524ca7a05f43815054d, type: 3}
+    - Type: Rock
+      Count: 22
+      Sprite: {fileID: 21300000, guid: 0044a75f7fc873141897654483ae2592, type: 3}
   - Name: ads
     StepCount: 3
     Field:

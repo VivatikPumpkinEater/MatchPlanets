@@ -69,7 +69,7 @@ public class Loading : MonoBehaviour
 
         if(_currentLvlNumber <= _lvlsData.LvlsData.Count - 1)
         {
-            LvlData lvlData = _lvlsData.LvlsData[_currentLvlNumber];
+            var lvlData = _lvlsData.LvlsData[_currentLvlNumber];
             _currentLvlData = lvlData;
             
             _loadingCoroutine = StartCoroutine(LoadingLvl(lvlData));
@@ -127,7 +127,7 @@ public class Loading : MonoBehaviour
     {
         CurrentStars = 0;
         
-        AudioManager.Instance.GetEffect("Loading");
+        AudioManager.LoadEffect("Loading");
         
         yield return new WaitForSeconds(2f);
 
@@ -138,7 +138,7 @@ public class Loading : MonoBehaviour
             yield return null;
         }
 
-        AudioManager.Instance.SetBGMusic("Game");
+        AudioManager.LoadBGMusic("Game");
 
         _loading.SetTrigger(End);
 

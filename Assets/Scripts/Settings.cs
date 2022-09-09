@@ -12,16 +12,10 @@ public class Settings : MonoBehaviour
     [SerializeField] private Slider _soundSlider = null;
 
     [SerializeField] private Button _vibroButton = null;
+
+    [SerializeField] private Sprite[] _musicIcons;
+    [SerializeField] private Sprite[] _soundIcons;
     
-    [SerializeField] private Button _closeButton = null;
-
-    [SerializeField] private Sprite[] _musicIcons = new Sprite[] { };
-    [SerializeField] private Sprite[] _soundIcons = new Sprite[] { };
-    
-    public System.Action CloseSettingsScreen;
-
-    private AudioManager _audioManager = null;
-
     private bool _muteMusic = false;
     private bool _muteSound = false;
 
@@ -33,35 +27,22 @@ public class Settings : MonoBehaviour
     
     private void Start()
     {
-        _audioManager = AudioManager.Instance;
-
-        if (_closeButton != null)
-        {
-            _closeButton.onClick.AddListener(CloseSettings);
-        }
-
-        if (!_audioManager) return;
-
         _musicSlider.onValueChanged.AddListener(ChangeMusicValue);
 
         _soundSlider.onValueChanged.AddListener(ChangeSoundValue);
 
-        _musicSlider.value = AudioManager.Instance.CurrentMusicVolume;
-        _soundSlider.value = AudioManager.Instance.CurrentSoundVolume;
+        _musicSlider.value = AudioManager.GetCurrentMusicVolume();
+        _soundSlider.value = AudioManager.GetCurrentSoundVolume();
         
         _vibroButton.onClick.AddListener(ChangeVibrationStatus);
         _vibroStatus = _vibroButton.GetComponentInChildren<TMP_Text>();
+        
         UpdateVibroButton();
-    }
-
-    private void CloseSettings()
-    {
-        CloseSettingsScreen?.Invoke();
     }
 
     private void ChangeMusicValue(float value)
     {
-        _audioManager.VolumeMusic(value);
+        AudioManager.ChangeMusicVolume(value);
 
         if (value == 0f)
         {
@@ -78,7 +59,7 @@ public class Settings : MonoBehaviour
 
     private void ChangeSoundValue(float value)
     {
-        _audioManager.VolumeEffect(value);
+        AudioManager.ChangeEffectsVolume(value);
 
         if (value == 0f)
         {
@@ -95,14 +76,14 @@ public class Settings : MonoBehaviour
 
     private void ChangeVibrationStatus()
     {
-        VibrationManager.Instance.VibrationAccess();
+        VibrationManager.ChangeVibrationStatus();
         
         UpdateVibroButton();
     }
 
     private void UpdateVibroButton()
     {
-        switch (VibrationManager.Instance.Vibration)
+        switch (VibrationManager.GetVibrationStatus())
         {
             case true:
                 _vibroStatus.text = vibroOn;

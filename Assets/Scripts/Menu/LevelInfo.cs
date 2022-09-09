@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
@@ -8,11 +9,10 @@ public class LevelInfo : MonoBehaviour
 {
     [SerializeField] private TMP_Text _lvlNumber = null;
     [SerializeField] private TMP_Text _lvlName = null;
-
-    [SerializeField] private Button _close = null;
+    
     [SerializeField] private Button _startLvl = null;
 
-    [SerializeField] private GameObject[] _stars = new GameObject[] { };
+    [SerializeField] private GameObject[] _stars;
 
     [Header("LvlTargets")] [SerializeField]
     private GameObject _pointsTarget = null;
@@ -22,9 +22,15 @@ public class LevelInfo : MonoBehaviour
     [SerializeField] private GameObject _tokensTarget = null;
     [SerializeField] private TokensTargetItem _tokensTargetPrefab = null;
 
-    private List<GameObject> _tokensTargets = new List<GameObject>();
+    private List<GameObject> _tokensTargets;
 
     private int _activeLvlNumber = 0;
+
+    private void Awake()
+    {
+        _tokensTargets = new List<GameObject>();
+    }
+
     public void SetUpLvlInfo(int lvlNumber, LvlData lvlData)
     {
         _lvlNumber.text = lvlNumber.ToString();
@@ -58,7 +64,6 @@ public class LevelInfo : MonoBehaviour
         }
 
         _startLvl.onClick.AddListener(() => StartLvl(lvlData));
-        _close.onClick.AddListener(CloseLevelInfo);
     }
     
     public void SetUpLvlInfo(int lvlNumber, LvlData lvlData, int starsCount)
@@ -70,6 +75,8 @@ public class LevelInfo : MonoBehaviour
 
     private void ActivateStars(int starsCount)
     {
+        ClearStars();
+        
         for (int i = 0; i < starsCount; i++)
         {
             _stars[i].SetActive(true);
@@ -97,11 +104,5 @@ public class LevelInfo : MonoBehaviour
         }
 
         _tokensTargets.Clear();
-    }
-
-    private void CloseLevelInfo()
-    {
-        transform.DOScale(Vector3.zero, 0.3f).OnComplete(() => gameObject.SetActive(false));
-        ClearStars();
     }
 }

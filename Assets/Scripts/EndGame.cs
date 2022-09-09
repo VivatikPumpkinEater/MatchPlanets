@@ -1,19 +1,15 @@
+using System;
 using System.Collections;
-using AppodealAds.Unity.Common;
 using AppodealAds.Unity.Api;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EndGame : MonoBehaviour , IRewardedVideoAdListener
+public class EndGame : MonoBehaviour
 {
-    [SerializeField] private GameObject _endPanel = null;
     [SerializeField] private TMP_Text _endStatus = null;
-
-    [SerializeField] private Button _resume = null;
-
-    [SerializeField] private GameObject _adsPanel = null;
+    
     [SerializeField] private Button _showAds = null;
 
     [SerializeField] private Image[] _stars = new Image[] { };
@@ -23,7 +19,7 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
     public System.Action<int> AddSteps;
 
     private int _gameOver = 0;
-    private FinishType _finishType;
+    public FinishType FinishType;
 
     private Coroutine _coroutine = null;
 
@@ -38,14 +34,14 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
         Instance = this;
     }
 
-    public void InitAdsCallback()
+    private void Start()
     {
-        Appodeal.setRewardedVideoCallbacks(this);
+        AdsManager.RewardVideoEndEvent += EndShowRewardVideo;
     }
 
     public void FinishedLvl(FinishType type)
     {
-        _finishType = type;
+        FinishType = type;
 
         if (_coroutine == null)
         {
@@ -61,22 +57,21 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
         }
         
         FSM.SetGameStatus(GameStatus.EndLvl);
-        
-        _endPanel.SetActive(true);
-        _endPanel.transform.localScale = Vector3.zero;
 
-        switch (_finishType)
+        switch (FinishType)
         {
             case FinishType.Win:
-                AudioManager.Instance.GetEffect("Win");
+                AudioManager.LoadEffect("Win");
                 Loading.Instance.UpdateLvlData();
                 ShowWinPanel();
                 break;
             case FinishType.Lose:
-                AudioManager.Instance.GetEffect("Lose");
+                AudioManager.LoadEffect("Lose");
                 ShowLosePanel();
                 break;
         }
+        
+        UIManager.Open<EndLvlWindow>();
 
         yield return new WaitForSeconds(1f);
 
@@ -89,10 +84,7 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
 
     private void ShowWinPanel()
     {
-        _endPanel.transform.DOScale(Vector3.one, 0.3f);
-        
         _endStatus.text = "Level Complete";
-        _resume.gameObject.SetActive(true);
         StartCoroutine(ShowStars(Loading.Instance.CurrentStars));
     }
 
@@ -106,7 +98,7 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
 
             _stars[i].transform.DOScale(Vector3.one, 0.3f);
             
-            AudioManager.Instance.GetEffect("Star");
+           AudioManager.LoadEffect("Star");
 
             yield return new WaitForSeconds(0.4f);
         }
@@ -114,16 +106,22 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
 
     private void ShowLosePanel()
     {
-        _endPanel.transform.DOScale(Vector3.one, 0.3f);
-
         _endStatus.text = "You LOSE";
-
-        _resume.gameObject.SetActive(false);
 
         if (_gameOver == 0)
         {
-            _adsPanel.SetActive(true);
+            _showAds.gameObject.SetActive(true);
             _showAds.onClick.AddListener(ShowRewardVideo);
+        }
+    }
+
+    private void EndShowRewardVideo(RewardVideoStatus rewardVideoStatus)
+    {
+        switch (rewardVideoStatus)
+        {
+            case RewardVideoStatus.Finished:
+                ResumeLevel();
+                break;
         }
     }
 
@@ -131,12 +129,10 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
     {
         FSM.SetGameStatus(GameStatus.Game);
         
-        _adsPanel.transform.DOScale(Vector3.zero, 0.2f).OnComplete(() => _adsPanel.SetActive(false));
+        _showAds.transform.DOScale(Vector3.zero, 0.2f).OnComplete(() => _showAds.gameObject.SetActive(false));
         
         _gameOver++;
         AddSteps?.Invoke(5);
-
-        _endPanel.transform.DOScale(Vector3.zero, 0.3f).OnComplete(() => _endPanel.SetActive(false));
     }
 
     private void ShowRewardVideo()
@@ -150,51 +146,6 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
         }
     }
 
-    public void onRewardedVideoLoaded(bool isPrecache)
-    {
-        Debug.Log("onRewardedVideoLoaded");
-        Debug.Log($"getPredictedEcpm(): {Appodeal.getPredictedEcpm(Appodeal.REWARDED_VIDEO)}");
-        
-        
-    }
-
-    public void onRewardedVideoFailedToLoad()
-    {
-        Debug.Log("onRewardedVideoFailedToLoad");
-    }
-
-    public void onRewardedVideoShowFailed()
-    {
-        Debug.Log("onRewardedVideoShowFailed");
-    }
-
-    public void onRewardedVideoShown()
-    {
-        Debug.Log("onRewardedVideoShown");
-    }
-
-    public void onRewardedVideoClosed(bool finished)
-    {
-        Debug.Log($"onRewardedVideoClosed. Finished - {finished}");
-        
-    }
-
-    public void onRewardedVideoFinished(double amount, string name)
-    {
-        Debug.Log("onRewardedVideoFinished. Reward: " + amount + " " + name);
-        
-        ResumeLevel();
-    }
-
-    public void onRewardedVideoExpired()
-    {
-        Debug.Log("onRewardedVideoExpired");
-    }
-
-    public void onRewardedVideoClicked()
-    {
-        Debug.Log("onRewardedVideoClicked");
-    }
 }
 
 public enum FinishType

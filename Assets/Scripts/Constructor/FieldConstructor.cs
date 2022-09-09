@@ -48,7 +48,7 @@ public class FieldConstructor : MonoBehaviour
     public bool Delete { get; private set; } = false;
     public CellInfo Cell { get; private set; } = null;
 
-    private List<ConstructCell> _constructCells;
+    private List<ConstructCell> _constructCells = new List<ConstructCell>();
 
     private const int MaxHeight = 12; // layer 12 only for spawnPoint
     private const int MaxWidth = 7;

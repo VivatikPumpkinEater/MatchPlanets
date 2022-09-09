@@ -14,7 +14,12 @@ public class Rock : Token
     protected override void Start()
     {
         base.Start();
-
+        
+        if(Hp < _hp)
+        {
+            Hp = _hp;
+        }
+        
         SpriteRenderer.sprite = _lvls[_hp - 1];
     }
 
