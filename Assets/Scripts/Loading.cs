@@ -1,4 +1,5 @@
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,11 +15,9 @@ public class Loading : MonoBehaviour
 
     private static readonly int Start = Animator.StringToHash("Start");
     private static readonly int End = Animator.StringToHash("End");
-    
+
     private int _currentLvlNumber = 0;
     private LvlData _currentLvlData;
-
-    private Coroutine _loadingCoroutine = null;
 
     private void Awake()
     {
@@ -39,46 +38,23 @@ public class Loading : MonoBehaviour
         Load(lvlData);
     }
 
-    private void Load(LvlData lvlData)
-    {
-        if (_loading == null)
-        {
-            _loading = GetComponentInChildren<Animator>();
-        }
-        _loading.SetTrigger(Start);
-
-        if (_loadingCoroutine != null)
-        {
-            StopCoroutine(_loadingCoroutine);
-            _loadingCoroutine = null;
-        }
-
-        _loadingCoroutine = StartCoroutine(LoadingLvl(lvlData));
-    }
-
     public void LoadNextLvl()
     {
-
-        _loading.SetTrigger(Start);
-
-        if (_loadingCoroutine != null)
+        if (!FSM.Status.Equals(GameStatus.Loading))
         {
-            StopCoroutine(_loadingCoroutine);
-            _loadingCoroutine = null;
-        }
+            if (_currentLvlNumber <= _lvlsData.LvlsData.Count - 1)
+            {
+                var lvlData = _lvlsData.LvlsData[_currentLvlNumber];
+                _currentLvlData = lvlData;
 
-        if(_currentLvlNumber <= _lvlsData.LvlsData.Count - 1)
-        {
-            var lvlData = _lvlsData.LvlsData[_currentLvlNumber];
-            _currentLvlData = lvlData;
-            
-            _loadingCoroutine = StartCoroutine(LoadingLvl(lvlData));
+                LoadingLvl(lvlData).Forget();
 
-            _currentLvlNumber++;
-        }
-        else
-        {
-            _loadingCoroutine = StartCoroutine(LoadingLvl(0));
+                _currentLvlNumber++;
+            }
+            else
+            {
+                LoadingLvl(0).Forget();
+            }
         }
     }
 
@@ -87,23 +63,26 @@ public class Loading : MonoBehaviour
         Load(_currentLvlData);
     }
 
+    private void Load(LvlData lvlData)
+    {
+        if (!FSM.Status.Equals(GameStatus.Loading))
+        {
+            LoadingLvl(lvlData).Forget();
+        }
+    }
+
     public void Load(int scene)
     {
-        _loading.SetTrigger(Start);
-
-        if (_loadingCoroutine != null)
+        if (!FSM.Status.Equals(GameStatus.Loading))
         {
-            StopCoroutine(_loadingCoroutine);
-            _loadingCoroutine = null;
+            LoadingLvl(scene).Forget();
         }
-
-        _loadingCoroutine = StartCoroutine(LoadingLvl(scene));
     }
 
     public void UpdateLvlData()
     {
         Debug.Log("Update lvl data");
-        
+
         var lvlData = _lvlsData.LvlsData[_currentLvlNumber - 1];
         lvlData.LevelPassed = true;
 
@@ -123,20 +102,26 @@ public class Loading : MonoBehaviour
         }
     }
 
-    private IEnumerator LoadingLvl(LvlData lvlData)
+    private async UniTaskVoid LoadingLvl(LvlData lvlData)
     {
+        FSM.SetGameStatus(GameStatus.Loading);
+
         CurrentStars = 0;
-        
+
+        _loading.SetTrigger(Start);
+
         AudioManager.LoadEffect("Loading");
-        
-        yield return new WaitForSeconds(2f);
+
+        await UniTask.Delay(2000);
 
         var nextLvl = SceneManager.LoadSceneAsync(1);
 
         while (!nextLvl.isDone)
         {
-            yield return null;
+            await UniTask.DelayFrame(0);
         }
+        
+        FSM.SetGameStatus(GameStatus.Loaded);
 
         AudioManager.LoadBGMusic("Game");
 
@@ -145,19 +130,27 @@ public class Loading : MonoBehaviour
         FindObjectOfType<LoadLvl>().Load(lvlData);
     }
 
-    private IEnumerator LoadingLvl(int scene)
+    private async UniTaskVoid LoadingLvl(int scene)
     {
-        yield return new WaitForSeconds(2f);
+        FSM.SetGameStatus(GameStatus.Loading);
+
+        _loading.SetTrigger(Start);
+
+        AudioManager.LoadEffect("Loading");
+
+        await UniTask.Delay(2000);
 
         var nextLvl = SceneManager.LoadSceneAsync(scene);
 
         while (!nextLvl.isDone)
         {
-            yield return null;
+            await UniTask.DelayFrame(0);
         }
-        
+
+        FSM.SetGameStatus(GameStatus.Loaded);
+
         AudioManager.LoadBGMusic("Menu");
-        
+
         _loading.SetTrigger(End);
     }
 }

@@ -1,6 +1,5 @@
-using System;
-using System.Collections;
 using AppodealAds.Unity.Api;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -9,19 +8,19 @@ using UnityEngine.UI;
 public class EndGame : MonoBehaviour
 {
     [SerializeField] private TMP_Text _endStatus = null;
-    
+
     [SerializeField] private Button _showAds = null;
 
     [SerializeField] private Image[] _stars = new Image[] { };
 
     public static EndGame Instance = null;
-    
+
     public System.Action<int> AddSteps;
 
     private int _gameOver = 0;
     public FinishType FinishType;
 
-    private Coroutine _coroutine = null;
+    private bool _wait = false;
 
     private void Awake()
     {
@@ -43,19 +42,20 @@ public class EndGame : MonoBehaviour
     {
         FinishType = type;
 
-        if (_coroutine == null)
+        if (!_wait)
         {
-            _coroutine = StartCoroutine(WaitEndSteps());
+            _wait = true;
+            WaitEndSteps().Forget();
         }
     }
 
-    private IEnumerator WaitEndSteps()
+    private async UniTaskVoid WaitEndSteps()
     {
         while (FSM.Status == GameStatus.Wait)
         {
-            yield return null;
+            await UniTask.DelayFrame(0);
         }
-        
+
         FSM.SetGameStatus(GameStatus.EndLvl);
 
         switch (FinishType)
@@ -70,37 +70,33 @@ public class EndGame : MonoBehaviour
                 ShowLosePanel();
                 break;
         }
-        
+
         UIManager.Open<EndLvlWindow>();
 
-        yield return new WaitForSeconds(1f);
+        await UniTask.Delay(1000);
 
-        if (_coroutine != null)
-        {
-            StopCoroutine(_coroutine);
-            _coroutine = null;
-        }
+        _wait = false;
     }
 
     private void ShowWinPanel()
     {
         _endStatus.text = "Level Complete";
-        StartCoroutine(ShowStars(Loading.Instance.CurrentStars));
+        ShowStars(Loading.Instance.CurrentStars).Forget();
     }
 
-    private IEnumerator ShowStars(int starCount)
+    private async UniTaskVoid ShowStars(int starCount)
     {
-        yield return new WaitForSeconds(0.3f);
+        await UniTask.Delay(300);
 
         for (int i = 0; i < starCount; i++)
         {
             _stars[i].gameObject.SetActive(true);
 
             _stars[i].transform.DOScale(Vector3.one, 0.3f);
-            
-           AudioManager.LoadEffect("Star");
 
-            yield return new WaitForSeconds(0.4f);
+            AudioManager.LoadEffect("Star");
+
+            await UniTask.Delay(400);
         }
     }
 
@@ -128,24 +124,24 @@ public class EndGame : MonoBehaviour
     private void ResumeLevel()
     {
         FSM.SetGameStatus(GameStatus.Game);
-        
+
         _showAds.transform.DOScale(Vector3.zero, 0.2f).OnComplete(() => _showAds.gameObject.SetActive(false));
-        
+
         _gameOver++;
         AddSteps?.Invoke(5);
     }
 
     private void ShowRewardVideo()
     {
-        if(Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)) {
-            Appodeal.show(Appodeal.REWARDED_VIDEO);	
+        if (Appodeal.isLoaded(Appodeal.REWARDED_VIDEO))
+        {
+            Appodeal.show(Appodeal.REWARDED_VIDEO);
         }
         else
         {
             _showAds.interactable = false;
         }
     }
-
 }
 
 public enum FinishType

@@ -14,4 +14,6 @@ public enum GameStatus
     Pause,
     Wait,
     EndLvl,
+    Loading,
+    Loaded
 }

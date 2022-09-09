@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -25,6 +27,9 @@ public class GameController : MonoBehaviour
 
     public List<Token> Tokens => _tokens;
 
+    private int _moveTimeMilliseconds;
+    private int _destroyTimeMilliseconds;
+
     private List<Token> _tokens = new List<Token>();
 
     private TokenMove _tokenMove;
@@ -38,7 +43,10 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         _fieldGenerator.LvlLoadedEvent += InitLvl;
-        _lineController.TokenToDestroy += tokens => StartCoroutine(DeleteToken(tokens));
+        _lineController.TokenToDestroy += tokens => DeleteToken(tokens).Forget();
+
+        _moveTimeMilliseconds = (int)(_moveTime * 1000);
+        _destroyTimeMilliseconds = (int)(_destroyTime * 1000);
     }
 
     private void InitLvl(Dictionary<Vector3, CellInfo> field, List<Vector3> spawnPoints, LvlData lvlData)
@@ -61,6 +69,7 @@ public class GameController : MonoBehaviour
                 {
                     _tokensTargetController.SetUpTargetsToken(tokenTarget.Type, tokenTarget.Sprite, tokenTarget.Count);
                 }
+
                 break;
         }
 
@@ -129,7 +138,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private IEnumerator DeleteToken(Token[] tokens)
+    private async UniTaskVoid DeleteToken(Token[] tokens)
     {
         FSM.SetGameStatus(GameStatus.Wait);
 
@@ -177,7 +186,7 @@ public class GameController : MonoBehaviour
                         }
                     }
 
-                    yield return new WaitForSecondsRealtime(_destroyTime);
+                    await UniTask.Delay(_destroyTimeMilliseconds);
                 }
 
                 if (_endPoint != null)
@@ -203,13 +212,13 @@ public class GameController : MonoBehaviour
                     Destroy(token.gameObject);
                 }
 
-                yield return new WaitForSecondsRealtime(_destroyTime);
+                await UniTask.Delay(_destroyTimeMilliseconds);
             }
         }
 
-        yield return new WaitForSecondsRealtime(_destroyTime);
+        await UniTask.Delay(_destroyTimeMilliseconds);
 
-        StartCoroutine(Movement3());
+        Movement3().Forget();
     }
 
     private void DestroyTokens(Token token)
@@ -245,7 +254,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private IEnumerator Movement3()
+    private async UniTaskVoid Movement3()
     {
         bool accept = true;
 
@@ -256,7 +265,7 @@ public class GameController : MonoBehaviour
             if (_tokens.Count == 0)
             {
                 SpawnToken();
-                yield return new WaitForSeconds(_moveTime);
+                await UniTask.Delay(_moveTimeMilliseconds);
             }
 
             foreach (var key in _fields.Keys)
@@ -297,10 +306,10 @@ public class GameController : MonoBehaviour
                 SpawnToken();
             }
 
-            yield return null;
+            await UniTask.DelayFrame(0);
         }
 
-        yield return null;
+        await UniTask.DelayFrame(0);
 
         Debug.Log("END MOVE");
 
@@ -343,7 +352,7 @@ public class GameController : MonoBehaviour
                     tokenPos = start + Vector3.up + Vector3.right;
                     break;
             }
-            
+
             if (SearchHelper(tokenPos, start))
             {
                 return _tokenMove;
@@ -372,7 +381,7 @@ public class GameController : MonoBehaviour
 
         return false;
     }
-    
+
     private bool SearchHelper(Vector3 tokenPos, Vector3 start, int iteration)
     {
         if (SearchHelper(tokenPos, start))
