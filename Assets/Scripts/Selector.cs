@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 
 public class Selector : MonoBehaviour
@@ -10,7 +7,7 @@ public class Selector : MonoBehaviour
 
     private GameController _gameController = null;
 
-    private Token _actualType;
+    private TokenType _actualType;
     private Color _actualColor;
 
     private void Start()
@@ -18,23 +15,23 @@ public class Selector : MonoBehaviour
         _gameController = GetComponent<GameController>();
         _tokens = _gameController.Tokens;
 
-        LineController.Instance.ActualTokenType += Selected;
+        LineController.Instance.ActualTokenTypeEvent += Selected;
     }
 
-    private void Selected(Token typeSelect)
+    private void Selected(TokenType typeSelect)
     {
         foreach (var token in _tokens)
         {
             switch (typeSelect)
             {
-                case null:
-                    if (token.GetType() != _actualType.GetType())
+                case TokenType.Null:
+                    if (token.GetType().ToString() != _actualType.ToString())
                     {
                         ChangeAlpha(token.gameObject, 1f);
                     }
                     break;
                 default:
-                    if (token.GetType() != typeSelect.GetType())
+                    if (token.GetType().ToString() != typeSelect.ToString())
                     {
                         ChangeAlpha(token.gameObject, 0.5f);
                     }

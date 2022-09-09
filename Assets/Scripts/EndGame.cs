@@ -1,33 +1,26 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using AppodealAds.Unity.Common;
 using AppodealAds.Unity.Api;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EndGame : MonoBehaviour , IRewardedVideoAdListener
+public class EndGame : MonoBehaviour
 {
-    [SerializeField] private GameObject _endPanel = null;
     [SerializeField] private TMP_Text _endStatus = null;
 
-    [SerializeField] private Button _resume = null;
-
-    [SerializeField] private GameObject _adsPanel = null;
     [SerializeField] private Button _showAds = null;
 
     [SerializeField] private Image[] _stars = new Image[] { };
 
     public static EndGame Instance = null;
-    
+
     public System.Action<int> AddSteps;
 
     private int _gameOver = 0;
-    private FinishType _finishType;
+    public FinishType FinishType;
 
-    private Coroutine _coroutine = null;
+    private bool _wait = false;
 
     private void Awake()
     {
@@ -40,161 +33,114 @@ public class EndGame : MonoBehaviour , IRewardedVideoAdListener
         Instance = this;
     }
 
-    public void InitAdsCallback()
+    private void Start()
     {
-        Appodeal.setRewardedVideoCallbacks(this);
+        AdsManager.RewardVideoEndEvent += EndShowRewardVideo;
     }
 
     public void FinishedLvl(FinishType type)
     {
-        _finishType = type;
+        FinishType = type;
 
-        if (_coroutine == null)
+        if (!_wait)
         {
-            _coroutine = StartCoroutine(WaitEndSteps());
+            _wait = true;
+            WaitEndSteps().Forget();
         }
     }
 
-    private IEnumerator WaitEndSteps()
+    private async UniTaskVoid WaitEndSteps()
     {
-        while (FSM.Wait)
+        while (FSM.Status == GameStatus.Wait)
         {
-            yield return null;
+            await UniTask.DelayFrame(0);
         }
-        FSM.SetGameStatus(GameStatus.EndLvl);
-        
-        _endPanel.SetActive(true);
-        _endPanel.transform.localScale = Vector3.zero;
 
-        switch (_finishType)
+        FSM.SetGameStatus(GameStatus.EndLvl);
+
+        switch (FinishType)
         {
             case FinishType.Win:
-                AudioManager.Instance.GetEffect("Win");
+                AudioManager.LoadEffect("Win");
                 Loading.Instance.UpdateLvlData();
                 ShowWinPanel();
                 break;
             case FinishType.Lose:
-                AudioManager.Instance.GetEffect("Lose");
+                AudioManager.LoadEffect("Lose");
                 ShowLosePanel();
                 break;
         }
 
-        yield return new WaitForSeconds(1f);
+        UIManager.Open<EndLvlWindow>();
 
-        if (_coroutine != null)
-        {
-            StopCoroutine(_coroutine);
-            _coroutine = null;
-        }
+        await UniTask.Delay(1000);
+
+        _wait = false;
     }
 
     private void ShowWinPanel()
     {
-        _endPanel.transform.DOScale(Vector3.one, 0.3f);
-        
         _endStatus.text = "Level Complete";
-        _resume.gameObject.SetActive(true);
-        StartCoroutine(ShowStars(Loading.Instance.CurrentStars));
+        ShowStars(Loading.Instance.CurrentStars).Forget();
     }
 
-    private IEnumerator ShowStars(int starCount)
+    private async UniTaskVoid ShowStars(int starCount)
     {
-        yield return new WaitForSeconds(0.3f);
+        await UniTask.Delay(300);
 
         for (int i = 0; i < starCount; i++)
         {
             _stars[i].gameObject.SetActive(true);
 
             _stars[i].transform.DOScale(Vector3.one, 0.3f);
-            
-            AudioManager.Instance.GetEffect("Star");
 
-            yield return new WaitForSeconds(0.4f);
+            AudioManager.LoadEffect("Star");
+
+            await UniTask.Delay(400);
         }
     }
 
     private void ShowLosePanel()
     {
-        _endPanel.transform.DOScale(Vector3.one, 0.3f);
-
         _endStatus.text = "You LOSE";
-
-        _resume.gameObject.SetActive(false);
 
         if (_gameOver == 0)
         {
-            _adsPanel.SetActive(true);
+            _showAds.gameObject.SetActive(true);
             _showAds.onClick.AddListener(ShowRewardVideo);
+        }
+    }
+
+    private void EndShowRewardVideo(RewardVideoStatus rewardVideoStatus)
+    {
+        switch (rewardVideoStatus)
+        {
+            case RewardVideoStatus.Finished:
+                ResumeLevel();
+                break;
         }
     }
 
     private void ResumeLevel()
     {
         FSM.SetGameStatus(GameStatus.Game);
-        
-        _adsPanel.transform.DOScale(Vector3.zero, 0.2f).OnComplete(() => _adsPanel.SetActive(false));
-        
+
+        _showAds.transform.DOScale(Vector3.zero, 0.2f).OnComplete(() => _showAds.gameObject.SetActive(false));
+
         _gameOver++;
         AddSteps?.Invoke(5);
-
-        _endPanel.transform.DOScale(Vector3.zero, 0.3f).OnComplete(() => _endPanel.SetActive(false));
     }
 
     private void ShowRewardVideo()
     {
-        if(Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)) {
-            Appodeal.show(Appodeal.REWARDED_VIDEO);	
+        if (Appodeal.isLoaded(Appodeal.REWARDED_VIDEO))
+        {
+            Appodeal.show(Appodeal.REWARDED_VIDEO);
         }
         else
         {
             _showAds.interactable = false;
         }
-    }
-
-    public void onRewardedVideoLoaded(bool isPrecache)
-    {
-        Debug.Log("onRewardedVideoLoaded");
-        Debug.Log($"getPredictedEcpm(): {Appodeal.getPredictedEcpm(Appodeal.REWARDED_VIDEO)}");
-        
-        
-    }
-
-    public void onRewardedVideoFailedToLoad()
-    {
-        Debug.Log("onRewardedVideoFailedToLoad");
-    }
-
-    public void onRewardedVideoShowFailed()
-    {
-        Debug.Log("onRewardedVideoShowFailed");
-    }
-
-    public void onRewardedVideoShown()
-    {
-        Debug.Log("onRewardedVideoShown");
-    }
-
-    public void onRewardedVideoClosed(bool finished)
-    {
-        Debug.Log($"onRewardedVideoClosed. Finished - {finished}");
-        
-    }
-
-    public void onRewardedVideoFinished(double amount, string name)
-    {
-        Debug.Log("onRewardedVideoFinished. Reward: " + amount + " " + name);
-        
-        ResumeLevel();
-    }
-
-    public void onRewardedVideoExpired()
-    {
-        Debug.Log("onRewardedVideoExpired");
-    }
-
-    public void onRewardedVideoClicked()
-    {
-        Debug.Log("onRewardedVideoClicked");
     }
 }
 

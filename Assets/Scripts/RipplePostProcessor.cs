@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RipplePostProcessor : MonoBehaviour
@@ -20,9 +18,7 @@ public class RipplePostProcessor : MonoBehaviour
 
     public void RippleEffect(Vector2 position)
     {
-        Debug.Log("Ripple");
         this.Amount = this.MaxAmount;
-        //Vector3 pos = Input.mousePosition;
         this.RippleMaterial.SetFloat("_CenterX", position.x);
         this.RippleMaterial.SetFloat("_CenterY", position.y);
     }

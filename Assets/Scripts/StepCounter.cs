@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -17,7 +14,7 @@ public class StepCounter : MonoBehaviour
 
     private void Start()
     {
-        _lvl.StepCount += Init;
+        _lvl.StepsLoadedEvent += Init;
         LineController.Instance.EndStep += EndStep;
         _endGame.AddSteps += AddStep;
     }

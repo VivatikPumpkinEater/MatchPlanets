@@ -1,6 +1,3 @@
-using System;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
@@ -53,8 +50,8 @@ public class FieldConstructor : MonoBehaviour
 
     private List<ConstructCell> _constructCells = new List<ConstructCell>();
 
-    private const int MAX_HEIGHT = 12; // layer 12 only for spawnPoint
-    private const int MAX_WIDTH = 7;
+    private const int MaxHeight = 12; // layer 12 only for spawnPoint
+    private const int MaxWidth = 7;
 
 
     private void Awake()
@@ -85,16 +82,16 @@ public class FieldConstructor : MonoBehaviour
 
     private void GeneratedSimpleField()
     {
-        for (int y = 0; y < MAX_HEIGHT; y++)
+        for (int y = 0; y < MaxHeight; y++)
         {
-            for (int x = 0; x < MAX_WIDTH; x++)
+            for (int x = 0; x < MaxWidth; x++)
             {
                 var cell = Instantiate(_constructCellPrefab, transform);
                 cell.transform.position = new Vector3(x, y);
 
                 _constructCells.Add(cell);
 
-                if (y == MAX_HEIGHT - 1)
+                if (y == MaxHeight - 1)
                 {
                     cell.GetComponent<SpriteRenderer>().color = Color.cyan;
                 }
@@ -162,11 +159,10 @@ public class FieldConstructor : MonoBehaviour
 
     private void CheckInputData()
     {
-        LvlData lvlData = new LvlData();
+        var lvlData = new LvlData();
 
         if (_inputName.text.Length == 0)
         {
-            Debug.LogError("Name: null");
             FormationError(_inputName.gameObject);
             return;
         }
@@ -177,7 +173,6 @@ public class FieldConstructor : MonoBehaviour
 
         if (_stepCount.text.Length == 0)
         {
-            Debug.LogError("Step: null");
             FormationError(_stepCount.gameObject);
             return;
         }
@@ -188,7 +183,6 @@ public class FieldConstructor : MonoBehaviour
 
         if (_scoreForStars.text.Length == 0)
         {
-            Debug.LogError("Score for stars: null");
             FormationError(_scoreForStars.gameObject);
             return;
         }
@@ -224,11 +218,11 @@ public class FieldConstructor : MonoBehaviour
                         return;
                     }
 
-                    List<TokenTarget> tokenTargets = new List<TokenTarget>();
+                    var tokenTargets = new List<TokenTarget>();
                     
                     foreach (var constructItem in _tokensTargetInputScreen.ActiveObjects)
                     {
-                        TokenTarget tokenTarget = new TokenTarget();
+                        var tokenTarget = new TokenTarget();
                         
                         tokenTarget.Count = int.Parse(constructItem.TokenCount.text);
                         tokenTarget.Sprite = constructItem.SpriteToken;
@@ -283,7 +277,6 @@ public class FieldConstructor : MonoBehaviour
                 _errorScreen.SetActive(false);
             });
         });
-        //error.transform.DOShakePosition(0.5f, Vector3.right * 250).OnComplete(() => _saveLvl.interactable = true);
     }
 
     private void ShowTargetsSettings(bool b)
@@ -307,8 +300,8 @@ public class FieldConstructor : MonoBehaviour
 
     private void Save(LvlData lvlData)
     {
-        List<CellData> field = new List<CellData>();
-        List<Vector3> spawnPoints = new List<Vector3>();
+        var field = new List<CellData>();
+        var spawnPoints = new List<Vector3>();
 
         foreach (var constructCell in _constructCells)
         {
@@ -320,7 +313,7 @@ public class FieldConstructor : MonoBehaviour
 
                 if (constructCell.Cell.ActualToken != null)
                 {
-                    cellData.TokenType = constructCell.Cell.ActualToken.GetType().ToString();
+                    cellData.TokenType = constructCell.Cell.ActualToken.Type.ToString();
                     cellData.TokenHp = constructCell.Cell.ActualToken.Hp;
                 }
                 else
@@ -343,8 +336,6 @@ public class FieldConstructor : MonoBehaviour
 
         if (spawnPoints.Count == 0)
         {
-            Debug.Log("No spawn points");
-            
             FormationError("Please setUp spawn points");
             
             return;
@@ -357,55 +348,5 @@ public class FieldConstructor : MonoBehaviour
         _lvlsConstructData.LvlsData.Add(lvlData);
         
         Debug.Log("SAVE");
-    }
-    
-    private void Save()
-    {
-        Debug.Log("SAVE");
-
-        int id = _lvlsConstructData.LvlsData.Count;
-
-        var lvlData = new LvlData();
-
-
-        List<CellData> field = new List<CellData>();
-        List<Vector3> spawnPoints = new List<Vector3>();
-
-        foreach (var constructCell in _constructCells)
-        {
-            if (constructCell.Cell)
-            {
-                var cellData = new CellData();
-
-                cellData.Position = constructCell.Cell.transform.position;
-
-                if (constructCell.Cell.ActualToken != null)
-                {
-                    cellData.TokenType = constructCell.Cell.ActualToken.GetType().ToString();
-                    cellData.TokenHp = constructCell.Cell.ActualToken.Hp;
-                }
-                else
-                {
-                    cellData.TokenType = "null";
-                }
-
-
-                field.Add(cellData);
-            }
-            else if (constructCell.SpawnPoint)
-            {
-                var cellData = new CellData();
-
-                cellData.Position = constructCell.SpawnPoint.transform.position;
-
-                spawnPoints.Add(constructCell.SpawnPoint.transform.position);
-            }
-        }
-
-        lvlData.Name = _inputName.text;
-        lvlData.Field = field;
-        lvlData.SpawnPoints = spawnPoints;
-
-        _lvlsConstructData.LvlsData.Add(lvlData);
     }
 }

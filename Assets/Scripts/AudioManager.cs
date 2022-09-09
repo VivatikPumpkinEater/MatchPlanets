@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,38 +9,83 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private Pool _pool = null;
     
-    [SerializeField] private List<BGmusicClips> _bgClips = new List<BGmusicClips>();
-    [SerializeField] private List<EffectClips> _effectClips = new List<EffectClips>();
-    public static AudioManager Instance = null;
+    [SerializeField] private List<BGmusicClips> _bgClips;
+    [SerializeField] private List<EffectClips> _effectClips;
+    
+    private static AudioManager _instance = null;
 
-    public float CurrentMusicVolume{get; private set;} = 1;
-    public float CurrentSoundVolume{get; private set;} = 1;
+    private float _currentMusicVolume = 1;
+    private float _currentSoundVolume = 1;
     
     private void Awake()
     {
-        if (Instance != null)
+        if (_instance != null)
         {
             Destroy(gameObject);
             return;
         }
 
-        Instance = this;
+        _instance = this;
         
+        InitVolume();
         SetBGMusic("Menu");
     }
     
-    public void VolumeMusic(float volume)
+    private void InitVolume()
     {
-        CurrentMusicVolume = volume;
+        if (PlayerPrefs.HasKey("MusicVolume"))
+        {
+            _currentMusicVolume = PlayerPrefs.GetFloat("MusicVolume");
+        }
+
+        if (PlayerPrefs.HasKey("SoundVolume"))
+        {
+            _currentSoundVolume = PlayerPrefs.GetFloat("SoundVolume");
+        }
+    }
+
+    public static float GetCurrentMusicVolume()
+    {
+        return _instance._currentMusicVolume;
+    }
+    
+    public static float GetCurrentSoundVolume()
+    {
+        return _instance._currentSoundVolume;
+    }
+    
+    public static void LoadBGMusic(string placement)
+    {
+        _instance.SetBGMusic(placement);
+    }
+
+    public static void LoadEffect(string name)
+    {
+        _instance.GetEffect(name);
+    }
+
+    public static void ChangeMusicVolume(float volume)
+    {
+        _instance.VolumeMusic(volume);
+    }
+    
+    public static void ChangeEffectsVolume(float volume)
+    {
+        _instance.VolumeEffect(volume);
+    }
+    
+    private void VolumeMusic(float volume)
+    {
+        _currentMusicVolume = volume;
         _musicSource.volume = volume;
     }
     
-    public void VolumeEffect(float volume)
+    private void VolumeEffect(float volume)
     {
-        CurrentSoundVolume = volume;
+        _currentSoundVolume = volume;
     }
 
-    public void SetBGMusic(string placement)
+    private void SetBGMusic(string placement)
     {
         foreach (var bgClip in _bgClips)
         {
@@ -53,8 +97,8 @@ public class AudioManager : MonoBehaviour
             }
         }
     }
-
-    public void GetEffect(string name)
+    
+    private void GetEffect(string name)
     {
         foreach (var effectClip in _effectClips)
         {
@@ -64,7 +108,7 @@ public class AudioManager : MonoBehaviour
                 
                 var audioSource = poolObject.GetComponent<AudioSource>();
                 audioSource.clip = effectClip.AudioClip;
-                audioSource.volume = CurrentSoundVolume;
+                audioSource.volume = _currentSoundVolume;
                 audioSource.pitch = Random.Range(1f, 1.5f);
                 audioSource.Play();
 
@@ -72,6 +116,12 @@ public class AudioManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetFloat("MusicVolume", _currentMusicVolume);
+        PlayerPrefs.SetFloat("SoundVolume", _currentSoundVolume);
     }
 }
 [Serializable]

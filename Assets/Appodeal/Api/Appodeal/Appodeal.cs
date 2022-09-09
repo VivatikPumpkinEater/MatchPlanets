@@ -776,7 +776,7 @@ namespace AppodealAds.Unity.Api
         /// <param name="adsInitialization"></param>
         /// <param name="listener">class which implements AppodealAds.Unity.Common.IInAppPurchaseValidationListener interface.</param>
         public static void validatePlayStoreInAppPurchase(IPlayStoreInAppPurchase purchase,
-            AdsInitialization adsInitialization, IInAppPurchaseValidationListener listener = null)
+            AdsManager adsInitialization, IInAppPurchaseValidationListener listener = null)
         {
             getInstance().validatePlayStoreInAppPurchase(purchase, listener);
         }
