@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class GyroscopeController : MonoBehaviour
 {
-    [SerializeField] private float _speed = 0f;
+    [SerializeField] private float _speed;
 
-    private Gyroscope _gyroscope = null;
+    private Gyroscope _gyroscope;
 
     private void Start()
     {

@@ -4,11 +4,10 @@ using UnityEngine.UI;
 
 public class SettingsWindow : Window
 {
-    [SerializeField] private GameObject _settingsPanel = null;
-    [SerializeField] private Button _close = null;
-    protected override void Awake()
+    [SerializeField] private GameObject _settingsPanel;
+    [SerializeField] private Button _close;
+    protected void Awake()
     {
-        base.Awake();
         FullScreen = false;
         
         _close.onClick.AddListener(Close);

@@ -4,18 +4,18 @@ using UnityEngine.UI;
 
 public class TokensTargetSettings : MonoBehaviour
 {
-    [SerializeField] private TargetConstructItem _targetsItemPrefab = null;
+    [SerializeField] private TargetConstructItem _targetsItemPrefab;
 
-    [SerializeField] private Transform _content = null;
+    [SerializeField] private Transform _content;
 
-    [SerializeField] private Button _addedObject = null;
-    [SerializeField] private Button _deleteObject = null;
+    [SerializeField] private Button _addedObject;
+    [SerializeField] private Button _deleteObject;
 
-    [SerializeField] private TargetTokenSelect _tokensSelect = null;
+    [SerializeField] private TargetTokenSelect _tokensSelect;
 
-    public List<TargetConstructItem> ActiveObjects {get; private set; } = new List<TargetConstructItem>();
+    public List<TargetConstructItem> ActiveObjects {get;} = new List<TargetConstructItem>();
 
-    private float _step = 0f;
+    private float _step;
     private void Awake()
     {
         _addedObject.onClick.AddListener(AddedObject);

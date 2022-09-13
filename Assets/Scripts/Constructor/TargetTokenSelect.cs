@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class TargetTokenSelect : MonoBehaviour
 {
-    [SerializeField] private List<TargetToken> _targetTokens = new List<TargetToken>();
+    [SerializeField] private List<TargetToken> _targetTokens;
 
     public TargetConstructItem TargetConstructItem { get; set; } = null;
 

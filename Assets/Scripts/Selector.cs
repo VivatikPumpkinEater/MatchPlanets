@@ -5,7 +5,7 @@ public class Selector : MonoBehaviour
 {
     private List<Token> _tokens = new List<Token>();
 
-    private GameController _gameController = null;
+    private GameController _gameController;
 
     private TokenType _actualType;
     private Color _actualColor;

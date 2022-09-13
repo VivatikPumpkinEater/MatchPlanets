@@ -5,19 +5,4 @@ public class Red : Token
     {
         Type = TokenType.Red;
     }
-    
-    protected override void OnMouseDown()
-    {
-        base.OnMouseDown();
-    }
-
-    protected override void OnMouseEnter()
-    {
-        base.OnMouseEnter();
-    }
-
-    protected override void OnMouseUp()
-    {
-        base.OnMouseUp();
-    }
 }

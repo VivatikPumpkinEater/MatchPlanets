@@ -3,9 +3,9 @@ using UnityEngine.UI;
 
 public class SelectedInfo : MonoBehaviour
 {
-    [SerializeField] private Button _cellReset = null;
-    [SerializeField] private Image _inputStatus = null;
-    [SerializeField] private Image _currentObject = null;
+    [SerializeField] private Button _cellReset;
+    [SerializeField] private Image _inputStatus;
+    [SerializeField] private Image _currentObject;
 
     public Button CellReset => _cellReset;
     public Image InputStatus => _inputStatus;

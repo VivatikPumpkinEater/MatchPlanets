@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class TargetConstructItem : MonoBehaviour
 {
-    [SerializeField] private Button _iconButton = null;
-    [SerializeField] private TMP_InputField _tokensCountTarget = null;
+    [SerializeField] private Button _iconButton;
+    [SerializeField] private TMP_InputField _tokensCountTarget;
 
     public Button IconButton => _iconButton;
     

@@ -4,14 +4,13 @@ using UnityEngine.UI;
 
 public class PauseWindow : Window
 {
-    [SerializeField] private GameObject _pausePanel = null;
-    [SerializeField] private Button _pause = null;
-    [SerializeField] private Button _resume = null;
-    [SerializeField] private Button _home = null;
-    [SerializeField] private Button _restart = null;
-    protected override void Awake()
+    [SerializeField] private GameObject _pausePanel;
+    [SerializeField] private Button _pause;
+    [SerializeField] private Button _resume;
+    [SerializeField] private Button _home;
+    [SerializeField] private Button _restart;
+    protected void Awake()
     {
-        base.Awake();
         FullScreen = false;
         
         _resume.onClick.AddListener(Close);
@@ -27,7 +26,7 @@ public class PauseWindow : Window
 
     protected override void SelfOpen()
     {
-        FSM.SetGameStatus(GameStatus.Pause);
+        FSM.Status = GameStatus.Pause;
         
         _pausePanel.gameObject.SetActive(true);
         _pausePanel.transform.localScale = Vector3.zero;
@@ -41,7 +40,7 @@ public class PauseWindow : Window
 
         if (FSM.Status.Equals(GameStatus.Pause))
         {
-            FSM.SetGameStatus(GameStatus.Game);
+            FSM.Status = GameStatus.Game;
         }
     }
     

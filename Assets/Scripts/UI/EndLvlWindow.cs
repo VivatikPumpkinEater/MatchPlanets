@@ -4,14 +4,13 @@ using UnityEngine.UI;
 
 public class EndLvlWindow : Window
 {
-    [SerializeField] private GameObject _endPanel = null;
-    [SerializeField] private Button _resume = null;
-    [SerializeField] private Button _restart = null;
-    [SerializeField] private Button _home = null;
+    [SerializeField] private GameObject _endPanel;
+    [SerializeField] private Button _resume;
+    [SerializeField] private Button _restart;
+    [SerializeField] private Button _home;
     
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
         FullScreen = false;
         
         _resume.onClick.AddListener(Resume);
@@ -22,7 +21,7 @@ public class EndLvlWindow : Window
     protected override void Start()
     {
         base.Start();
-        AdsManager.RewardVideoEndEvent += ResumeButtonStatus;
+        AdsManager.RewardVideoFinishedEvent += ResumeButtonStatus;
     }
 
     protected override void SelfOpen()

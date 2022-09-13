@@ -591,9 +591,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d5a6eef8611799468a21cb5a6d5752e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RippleMaterial: {fileID: 2100000, guid: bc5c79b373b1af94c9ef48862aff343d, type: 2}
-  MaxAmount: 50
-  Friction: 0.9
+  _rippleMaterial: {fileID: 2100000, guid: bc5c79b373b1af94c9ef48862aff343d, type: 2}
+  _maxAmount: 50
+  _friction: 0.9
 --- !u!1 &45978840
 GameObject:
   m_ObjectHideFlags: 0
@@ -1169,16 +1169,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a9b5bd759bd0248a4d559d883511c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lvlsConstruct: {fileID: 0}
-  _cellPrefab: {fileID: 6474453214548730636, guid: 18dbbac6194dccc42a21b2d9f74a19fe, type: 3}
-  _tokens:
-  - {fileID: 9044137859512898200, guid: 4fee5cd97ae3e1c49a9a538f5a4eb5ad, type: 3}
-  - {fileID: 3007954729440324879, guid: 22122c840813bbc41bf2d0a681ff77e5, type: 3}
-  - {fileID: 3244706334838453480, guid: 4b7ab4b6669e0bf4897d38eb4a67b1ff, type: 3}
-  - {fileID: 4408113485946644633, guid: b8baef3b9722cb342a9ebcb13e5c891d, type: 3}
-  - {fileID: 6785793499640438930, guid: 4562a8f0ca2548c40b03b99327123450, type: 3}
-  - {fileID: 2231664877692508069, guid: e1a208d54ab01864ab5e64d45c9020e3, type: 3}
-  - {fileID: 2517947854820238926, guid: a72caca3cb3cbae4ea9b17c2ae0a374a, type: 3}
 --- !u!1 &76705433
 GameObject:
   m_ObjectHideFlags: 0
@@ -2056,7 +2046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stepTxt: {fileID: 1417121324}
-  _lvl: {fileID: 75694515}
+  _gameController: {fileID: 699163357}
   _endGame: {fileID: 699163361}
 --- !u!114 &315655920
 MonoBehaviour:
@@ -2070,10 +2060,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0506a8eec16188c4e977fa04ae658e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentWindow: {fileID: 0}
   LastWindow: {fileID: 0}
   MicroWindow: {fileID: 0}
-  Windows: []
 --- !u!1 &393853319
 GameObject:
   m_ObjectHideFlags: 0
@@ -3076,14 +3064,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af33b73a874b5840922d5a360ceb29c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fieldGenerator: {fileID: 75694515}
   _lineController: {fileID: 1260458762}
+  _cellPrefab: {fileID: 6474453214548730636, guid: 18dbbac6194dccc42a21b2d9f74a19fe, type: 3}
   _tokensPrefab:
   - {fileID: 9044137859512898200, guid: 4fee5cd97ae3e1c49a9a538f5a4eb5ad, type: 3}
   - {fileID: 3007954729440324879, guid: 22122c840813bbc41bf2d0a681ff77e5, type: 3}
   - {fileID: 3244706334838453480, guid: 4b7ab4b6669e0bf4897d38eb4a67b1ff, type: 3}
   - {fileID: 4408113485946644633, guid: b8baef3b9722cb342a9ebcb13e5c891d, type: 3}
   - {fileID: 6785793499640438930, guid: 4562a8f0ca2548c40b03b99327123450, type: 3}
+  - {fileID: 2231664877692508069, guid: e1a208d54ab01864ab5e64d45c9020e3, type: 3}
+  - {fileID: 2517947854820238926, guid: a72caca3cb3cbae4ea9b17c2ae0a374a, type: 3}
   _effectsPool: {fileID: 699163360}
   _destroyTime: 0.2
   _moveTime: 0.1
@@ -3145,7 +3135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef817517366db7e448c1aadb304a3396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _endPanel: {fileID: 1895589414}
   _endStatus: {fileID: 962750099}
   _showAds: {fileID: 842259035}
   _stars:

@@ -61,13 +61,13 @@ public class VibrationManager : MonoBehaviour
             switch (vibrationType)
             {
                 case VibrationType.Pop:
-                    global::Vibration.VibratePop();
+                    Vibration.VibratePop();
                     break;
                 case VibrationType.Peek:
-                    global::Vibration.VibratePeek();
+                    Vibration.VibratePeek();
                     break;
                 case VibrationType.Nope:
-                    global::Vibration.VibrateNope();
+                    Vibration.VibrateNope();
                     break;
             }
         }

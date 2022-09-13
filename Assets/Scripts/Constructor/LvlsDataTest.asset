@@ -225,8 +225,8 @@ MonoBehaviour:
     - {x: 6, y: 11, z: 0}
     ScoreForStars: 1000
     LevelUnlock: 1
-    LevelPassed: 0
-    Stars: 0
+    LevelPassed: 1
+    Stars: 2
     LevelTarget: 0
     PointsTarget: 1000
     TokenTargets: []

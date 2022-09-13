@@ -1,11 +1,7 @@
 
 public static class FSM
 {
-    public static GameStatus Status { get; private set; } = GameStatus.Wait;
-    public static void SetGameStatus(GameStatus status)
-    {
-        Status = status;
-    }
+    public static GameStatus Status { get; set; } = GameStatus.Wait;
 }
 
 public enum GameStatus

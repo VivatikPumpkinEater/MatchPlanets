@@ -4,8 +4,7 @@ using UnityEngine;
 [Serializable]
 public class Token : MonoBehaviour
 {
-    //public const int POINTS = 40;
-    public SpriteRenderer SpriteRenderer => _spriteRenderer = _spriteRenderer ?? GetComponent<SpriteRenderer>();
+    public SpriteRenderer SpriteRenderer => _spriteRenderer = _spriteRenderer ? _spriteRenderer : GetComponent<SpriteRenderer>();
     public Bonus Bonus { get; set; } = null;
     public int Hp { get; set; } = 1;
     public TokenType Type;

@@ -1,13 +1,12 @@
-using System.Collections;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Loading : MonoBehaviour
 {
-    [SerializeField] private Animator _loading = null;
+    [SerializeField] private Animator _loading;
 
-    [SerializeField] private LvlsConstruct _lvlsData = null;
+    [SerializeField] private LvlsConstruct _lvlsData;
 
     public static Loading Instance = null;
 
@@ -16,7 +15,7 @@ public class Loading : MonoBehaviour
     private static readonly int Start = Animator.StringToHash("Start");
     private static readonly int End = Animator.StringToHash("End");
 
-    private int _currentLvlNumber = 0;
+    private int _currentLvlNumber;
     private LvlData _currentLvlData;
 
     private void Awake()
@@ -104,7 +103,7 @@ public class Loading : MonoBehaviour
 
     private async UniTaskVoid LoadingLvl(LvlData lvlData)
     {
-        FSM.SetGameStatus(GameStatus.Loading);
+        FSM.Status = GameStatus.Loading;
 
         CurrentStars = 0;
 
@@ -121,18 +120,18 @@ public class Loading : MonoBehaviour
             await UniTask.DelayFrame(0);
         }
         
-        FSM.SetGameStatus(GameStatus.Loaded);
+        FSM.Status = GameStatus.Loaded;
 
         AudioManager.LoadBGMusic("Game");
 
         _loading.SetTrigger(End);
 
-        FindObjectOfType<LoadLvl>().Load(lvlData);
+        FindObjectOfType<GameController>().Load(lvlData);
     }
 
     private async UniTaskVoid LoadingLvl(int scene)
     {
-        FSM.SetGameStatus(GameStatus.Loading);
+        FSM.Status = GameStatus.Loading;
 
         _loading.SetTrigger(Start);
 
@@ -147,7 +146,7 @@ public class Loading : MonoBehaviour
             await UniTask.DelayFrame(0);
         }
 
-        FSM.SetGameStatus(GameStatus.Loaded);
+        FSM.Status = GameStatus.Loaded;
 
         AudioManager.LoadBGMusic("Menu");
 

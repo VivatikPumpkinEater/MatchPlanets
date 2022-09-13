@@ -1,58 +1,78 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private LoadLvl _fieldGenerator = null;
-    [SerializeField] private LineController _lineController = null;
+    [SerializeField] private LineController _lineController;
 
-    [SerializeField] private Token[] _tokensPrefab = new Token[] { };
+    [SerializeField] private CellInfo _cellPrefab;
+    [SerializeField] private Token[] _tokensPrefab;
 
-    [SerializeField] private Pool _effectsPool = null;
+    [SerializeField] private Pool _effectsPool;
 
-    [SerializeField] private float _destroyTime = 0.1f;
-    [SerializeField] private float _moveTime = 0.1f;
+    [SerializeField] private float _destroyTime;
+    [SerializeField] private float _moveTime;
 
-    [SerializeField] private PointsManager _pointsManager = null;
-    [SerializeField] private TokensTargetController _tokensTargetController = null;
+    [SerializeField] private PointsManager _pointsManager;
+    [SerializeField] private TokensTargetController _tokensTargetController;
 
-    [SerializeField] private Transform _endPoint = null;
+    [SerializeField] private Transform _endPoint;
 
-    [SerializeField] private RipplePostProcessor _ripplePostProcessor = null;
+    [SerializeField] private RipplePostProcessor _ripplePostProcessor;
 
+    public System.Action<int> StepsLoadedEvent;
     public List<Token> Tokens => _tokens;
-
-    private int _moveTimeMilliseconds;
-    private int _destroyTimeMilliseconds;
 
     private List<Token> _tokens = new List<Token>();
 
+    private Dictionary<string, Token> _tokensType = new Dictionary<string, Token>();
+
     private TokenMove _tokenMove;
 
-    private Dictionary<Vector3, CellInfo> _fields;
-    private List<Vector3> _spawnPoints;
-
-    private bool _move = false;
-    private bool _lvlTokenTarget = false;
+    private Dictionary<Vector3, CellInfo> _fields = new Dictionary<Vector3, CellInfo>();
+    private List<Vector3> _spawnPoints = new List<Vector3>();
+    
+    private bool _lvlTokenTarget;
+    
+    private int _moveTimeMilliseconds;
+    private int _destroyTimeMilliseconds;
 
     private void Awake()
     {
-        _fieldGenerator.LvlLoadedEvent += InitLvl;
-        _lineController.TokenToDestroy += tokens => DeleteToken(tokens).Forget();
+        _lineController.DestroyedTokensEvent += tokens => DeleteToken(tokens).Forget();
 
         _moveTimeMilliseconds = (int)(_moveTime * 1000);
         _destroyTimeMilliseconds = (int)(_destroyTime * 1000);
     }
 
-    private void InitLvl(Dictionary<Vector3, CellInfo> field, List<Vector3> spawnPoints, LvlData lvlData)
+    public void Load(LvlData lvlData)
     {
-        _fields = field;
-        _spawnPoints = spawnPoints;
+        ConstructTokensType();
+
+        foreach (var cellData in lvlData.Field)
+        {
+            var cell = Instantiate(_cellPrefab, cellData.Position, Quaternion.identity);
+
+            if (!cellData.TokenType.Equals("null"))
+            {
+                var token = Instantiate(ExtractToken(cellData.TokenType), cell.transform);
+                token.Hp = cellData.TokenHp;
+                token.Init();
+                cell.ActualToken = token;
+            }
+
+            _fields.Add(cell.transform.position, cell);
+        }
+
+        foreach (var spawnPoint in lvlData.SpawnPoints)
+        {
+            _spawnPoints.Add(spawnPoint);
+        }
+
+        StepsLoadedEvent?.Invoke(lvlData.StepCount);
 
         _pointsManager.InitPerfectScore(lvlData.ScoreForStars);
 
@@ -71,11 +91,27 @@ public class GameController : MonoBehaviour
                 }
 
                 break;
+            default:
+                _pointsManager.InitPointsTarget(lvlData.ScoreForStars);
+                break;
         }
 
-        SpawnToken(field);
+        SpawnToken(_fields);
 
-        FSM.SetGameStatus(GameStatus.Game);
+        FSM.Status = GameStatus.Game;
+    }
+
+    private void ConstructTokensType()
+    {
+        foreach (var token in _tokensPrefab)
+        {
+            _tokensType.Add(token.GetType().ToString(), token);
+        }
+    }
+
+    private Token ExtractToken(string type)
+    {
+        return _tokensType[type];
     }
 
     private void SpawnToken(Dictionary<Vector3, CellInfo> field)
@@ -84,16 +120,17 @@ public class GameController : MonoBehaviour
         {
             if (!field[cell].ActualToken)
             {
-                var token = Instantiate(_tokensPrefab[Random.Range(0, _tokensPrefab.Length)],
+                var token = Instantiate(_tokensPrefab[Random.Range(0, 5)],
                     field[cell].transform.position, Quaternion.identity);
 
-                token.transform.parent = transform;
+                var tokenTransform = token.transform;
+                tokenTransform.parent = transform;
 
-                token.transform.localScale = Vector3.zero;
-                token.transform.localRotation = Quaternion.Euler(0, 0, 360);
+                tokenTransform.localScale = Vector3.zero;
+                tokenTransform.localRotation = Quaternion.Euler(0, 0, 360);
 
-                token.transform.DOScale(Vector3.one, 1f);
-                token.transform.DOLocalRotate(Vector3.zero, 1f);
+                tokenTransform.DOScale(Vector3.one, 1f);
+                tokenTransform.DOLocalRotate(Vector3.zero, 1f);
 
                 field[cell].ActualToken = token;
 
@@ -115,7 +152,7 @@ public class GameController : MonoBehaviour
             {
                 if (_fields[position].ActualToken == null)
                 {
-                    var token = Instantiate(_tokensPrefab[Random.Range(0, _tokensPrefab.Length)],
+                    var token = Instantiate(_tokensPrefab[Random.Range(0, 5)],
                         _fields[position].transform.position + Vector3.up,
                         Quaternion.identity);
 
@@ -140,7 +177,7 @@ public class GameController : MonoBehaviour
 
     private async UniTaskVoid DeleteToken(Token[] tokens)
     {
-        FSM.SetGameStatus(GameStatus.Wait);
+        FSM.Status = GameStatus.Wait;
 
         foreach (var token in tokens)
         {
@@ -148,13 +185,15 @@ public class GameController : MonoBehaviour
             {
                 AudioManager.LoadEffect("TokenDestroy");
 
-                _fields[token.transform.position].ActualToken = null;
+                var position = token.transform.position;
+
+                _fields[position].ActualToken = null;
 
                 _tokens.Remove(token);
 
-                _effectsPool.GetFreeElement(token.transform.position);
+                _effectsPool.GetFreeElement(position);
 
-                var checkNeighbours = CheckNeighbours(token.transform.position);
+                var checkNeighbours = CheckNeighbours(position);
 
                 foreach (var token1 in checkNeighbours)
                 {
@@ -225,9 +264,10 @@ public class GameController : MonoBehaviour
     {
         if (token.Destroy())
         {
-            _fields[token.transform.position].ActualToken = null;
+            var position = token.transform.position;
+            _fields[position].ActualToken = null;
             _tokens.Remove(token);
-            _effectsPool.GetFreeElement(token.transform.position);
+            _effectsPool.GetFreeElement(position);
 
             token.SpriteRenderer.sortingOrder = 5;
 
@@ -256,7 +296,7 @@ public class GameController : MonoBehaviour
 
     private async UniTaskVoid Movement3()
     {
-        bool accept = true;
+        var accept = true;
 
         while (accept)
         {
@@ -285,13 +325,13 @@ public class GameController : MonoBehaviour
                     {
                         tokenMove.Token.Moving = true;
 
-                        _fields[tokenMove.startPosition].ActualToken = null;
+                        _fields[tokenMove.StartPosition].ActualToken = null;
 
-                        _fields[tokenMove.endPosition].ActualToken = tokenMove.Token;
+                        _fields[tokenMove.EndPosition].ActualToken = tokenMove.Token;
 
-                        float moveDuration = _moveTime * tokenMove.Iteration;
+                        var moveDuration = _moveTime * tokenMove.Iteration;
 
-                        tokenMove.Token.transform.DOMove(tokenMove.endPosition, moveDuration).OnComplete(() =>
+                        tokenMove.Token.transform.DOMove(tokenMove.EndPosition, moveDuration).OnComplete(() =>
                         {
                             tokenMove.Token.Moving = false;
                         });
@@ -314,14 +354,14 @@ public class GameController : MonoBehaviour
         Debug.Log("END MOVE");
 
 
-        FSM.SetGameStatus(GameStatus.Game);
+        FSM.Status = GameStatus.Game;
     }
 
     private TokenMove SearchToken(Vector3 start)
     {
         _tokenMove = new TokenMove();
 
-        for (int y = 1; y < 12; y++)
+        for (var y = 1; y < 12; y++)
         {
             var tokenPos = start + Vector3.up * y;
 
@@ -339,7 +379,7 @@ public class GameController : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < 2; i++)
+        for (var i = 0; i < 2; i++)
         {
             var tokenPos = Vector3.positiveInfinity;
 
@@ -372,8 +412,8 @@ public class GameController : MonoBehaviour
             }
 
             _tokenMove.Token = _fields[tokenPos].ActualToken;
-            _tokenMove.startPosition = _fields[tokenPos].transform.position;
-            _tokenMove.endPosition = start;
+            _tokenMove.StartPosition = _fields[tokenPos].transform.position;
+            _tokenMove.EndPosition = start;
             _tokenMove.Iteration = 1;
 
             return true;
@@ -402,26 +442,20 @@ public class GameController : MonoBehaviour
         checkPosition[2] = start + Vector3.down;
         checkPosition[3] = start + Vector3.left;
 
-        var tokensToDestroy = new List<Token>();
-
-        for (int i = 0; i < checkPosition.Length; i++)
-        {
-            if (_fields.ContainsKey(checkPosition[i]) && _fields[checkPosition[i]].ActualToken && (
-                    _fields[checkPosition[i]].ActualToken.Type.Equals(TokenType.Ice) ||
-                    _fields[checkPosition[i]].ActualToken.Type.Equals(TokenType.Rock)))
-            {
-                tokensToDestroy.Add(_fields[checkPosition[i]].ActualToken);
-            }
-        }
-
-        return tokensToDestroy;
+        return
+            (from position in checkPosition
+                where _fields.ContainsKey(position) && _fields[position].ActualToken &&
+                      (_fields[position].ActualToken.Type.Equals(TokenType.Ice) ||
+                       _fields[position].ActualToken.Type.Equals(TokenType.Rock))
+                select _fields[position].ActualToken
+            ).ToList();
     }
 }
 
 public struct TokenMove
 {
     public Token Token;
-    public Vector3 startPosition;
-    public Vector3 endPosition;
+    public Vector3 StartPosition;
+    public Vector3 EndPosition;
     public int Iteration;
 }

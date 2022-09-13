@@ -5,20 +5,21 @@ using UnityEngine.UI;
 
 public class PointsManager : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _scoreTxt = null;
+    [SerializeField] private TMP_Text _scoreTxt;
 
-    [SerializeField] private GameObject _pointsTargetPanel = null;
-    [SerializeField] private TMP_Text _pointsTargetTxt = null;
-    [SerializeField] private Image _falingImage = null;
+    [SerializeField] private GameObject _pointsTargetPanel;
+    [SerializeField] private TMP_Text _pointsTargetTxt;
+    [SerializeField] private Image _falingImage;
 
-    [SerializeField] private Image[] _stars = new Image[] { };
-    private int _score = 0;
+    [SerializeField] private Image[] _stars;
+    
+    private int _score;
 
     
-    private float _step = 0;
-    private float _stepStars = 0;
-    private int _currentStar = 0;
-    private bool _pointsTargetUse = false;
+    private float _step;
+    private float _stepStars;
+    private int _currentStar;
+    private bool _pointsTargetUse;
 
     private void Awake()
     {

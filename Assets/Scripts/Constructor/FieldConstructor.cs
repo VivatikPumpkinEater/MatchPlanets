@@ -6,41 +6,41 @@ using UnityEngine.UI;
 
 public class FieldConstructor : MonoBehaviour
 {
-    [SerializeField] private ConstructCell _constructCellPrefab = null;
-    [SerializeField] private CellInfo _cellPrefab = null;
+    [SerializeField] private ConstructCell _constructCellPrefab;
+    [SerializeField] private CellInfo _cellPrefab;
 
-    [SerializeField] private ScrollController _scrollController = null;
-    [SerializeField] private SelectedInfo _selectedInfo = null;
+    [SerializeField] private ScrollController _scrollController;
+    [SerializeField] private SelectedInfo _selectedInfo;
 
-    [SerializeField] private Sprite[] _inputStatus = new Sprite[2];
+    [SerializeField] private Sprite[] _inputStatus;
 
-    [SerializeField] private Button _reset = null;
-    [SerializeField] private Button _save = null;
+    [SerializeField] private Button _reset;
+    [SerializeField] private Button _save;
 
-    [SerializeField] private LvlsConstruct _lvlsConstructData = null;
+    [SerializeField] private LvlsConstruct _lvlsConstructData;
 
     [Header("Save Panel")] [SerializeField]
-    private GameObject _savePanel = null;
+    private GameObject _savePanel;
 
-    [SerializeField] private GameObject _errorScreen = null;
-    [SerializeField] private TMP_Text _errorTxt = null;
+    [SerializeField] private GameObject _errorScreen;
+    [SerializeField] private TMP_Text _errorTxt;
 
-    [SerializeField] private TMP_InputField _inputName = null;
+    [SerializeField] private TMP_InputField _inputName;
 
-    [SerializeField] private TMP_InputField _stepCount = null;
-    [SerializeField] private TMP_InputField _scoreForStars = null;
+    [SerializeField] private TMP_InputField _stepCount;
+    [SerializeField] private TMP_InputField _scoreForStars;
 
-    [SerializeField] private ToggleGroup _levelTargetsToggles = null;
+    [SerializeField] private ToggleGroup _levelTargetsToggles;
 
-    [Space(15)] [SerializeField] private Toggle _pointsTarget = null;
-    [SerializeField] private GameObject _pointsTargetInputScreen = null;
-    [SerializeField] private TMP_InputField _pointsTargetInputField = null;
+    [Space(15)] [SerializeField] private Toggle _pointsTarget;
+    [SerializeField] private GameObject _pointsTargetInputScreen;
+    [SerializeField] private TMP_InputField _pointsTargetInputField;
 
     [Space(15)]
-    [SerializeField] private TokensTargetSettings _tokensTargetInputScreen = null;
+    [SerializeField] private TokensTargetSettings _tokensTargetInputScreen;
 
-    [SerializeField] private Button _cancel = null;
-    [SerializeField] private Button _saveLvl = null;
+    [SerializeField] private Button _cancel;
+    [SerializeField] private Button _saveLvl;
 
     public Token ActiveObject { get; private set; } = null;
     public GameObject SpawnPoint { get; private set; } = null;
@@ -63,12 +63,12 @@ public class FieldConstructor : MonoBehaviour
 
         _pointsTarget.onValueChanged.AddListener(ShowTargetsSettings);
 
-        FSM.SetGameStatus(GameStatus.Game);
+        FSM.Status = GameStatus.Game;
     }
 
     private void Start()
     {
-        _scrollController.SelectedToken += Selected;
+        _scrollController.TokensSelectedEvent += Selected;
         _selectedInfo.CellReset.onClick.AddListener(WriteDelete);
 
         InitButtons();
@@ -145,14 +145,14 @@ public class FieldConstructor : MonoBehaviour
 
     private void OpenSaveSettings()
     {
-        FSM.SetGameStatus(GameStatus.Wait);
+        FSM.Status = GameStatus.Wait;
 
         _savePanel.SetActive(true);
     }
 
     private void CloseSaveSettings()
     {
-        FSM.SetGameStatus(GameStatus.Game);
+        FSM.Status = GameStatus.Game;
 
         _savePanel.SetActive(false);
     }
@@ -222,12 +222,13 @@ public class FieldConstructor : MonoBehaviour
                     
                     foreach (var constructItem in _tokensTargetInputScreen.ActiveObjects)
                     {
-                        var tokenTarget = new TokenTarget();
-                        
-                        tokenTarget.Count = int.Parse(constructItem.TokenCount.text);
-                        tokenTarget.Sprite = constructItem.SpriteToken;
-                        tokenTarget.Type = constructItem.Type;
-                        
+                        var tokenTarget = new TokenTarget
+                        {
+                            Count = int.Parse(constructItem.TokenCount.text),
+                            Sprite = constructItem.SpriteToken,
+                            Type = constructItem.Type
+                        };
+
                         tokenTargets.Add(tokenTarget);
                     }
 
@@ -307,9 +308,10 @@ public class FieldConstructor : MonoBehaviour
         {
             if (constructCell.Cell)
             {
-                var cellData = new CellData();
-
-                cellData.Position = constructCell.Cell.transform.position;
+                var cellData = new CellData
+                {
+                    Position = constructCell.Cell.transform.position
+                };
 
                 if (constructCell.Cell.ActualToken != null)
                 {
@@ -326,9 +328,12 @@ public class FieldConstructor : MonoBehaviour
             }
             else if (constructCell.SpawnPoint)
             {
-                var cellData = new CellData();
-
-                cellData.Position = constructCell.SpawnPoint.transform.position;
+                var cellData = new CellData
+                {
+                    Position = constructCell.SpawnPoint.transform.position
+                };
+                
+                field.Add(cellData);
 
                 spawnPoints.Add(constructCell.SpawnPoint.transform.position);
             }

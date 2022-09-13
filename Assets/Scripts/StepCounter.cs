@@ -4,41 +4,41 @@ using UnityEngine;
 
 public class StepCounter : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _stepTxt = null;
+    [SerializeField] private TMP_Text _stepTxt;
 
-    [SerializeField] private LoadLvl _lvl = null;
+    [SerializeField] private GameController _gameController;
 
-    [SerializeField] private EndGame _endGame = null;
+    [SerializeField] private EndGame _endGame;
     
-    public int StepLeft { get; private set; } = 0;
+    private int _stepLeft;
 
     private void Start()
     {
-        _lvl.StepsLoadedEvent += Init;
-        LineController.Instance.EndStep += EndStep;
-        _endGame.AddSteps += AddStep;
+        _gameController.StepsLoadedEvent += Init;
+        LineController.Instance.TurnCompletedEvent += EndStep;
+        _endGame.AddedStepsEvent += AddStep;
     }
 
     private void Init(int steps)
     {
-        StepLeft = steps;
+        _stepLeft = steps;
         UpdateUI();
     }
 
     private void AddStep(int stepCount)
     {
-        _endGame.AddSteps -= AddStep;
+        _endGame.AddedStepsEvent -= AddStep;
         
-        StepLeft += stepCount;
+        _stepLeft += stepCount;
         _stepTxt.gameObject.transform.DOShakeScale(0.2f);
         UpdateUI();
     }
 
     private void EndStep()
     {
-        StepLeft--;
+        _stepLeft--;
 
-        if (StepLeft <= 0)
+        if (_stepLeft <= 0)
         {
             EndGame.Instance.FinishedLvl(FinishType.Lose);
         }
@@ -48,6 +48,6 @@ public class StepCounter : MonoBehaviour
 
     private void UpdateUI()
     {
-        _stepTxt.text = StepLeft.ToString();
+        _stepTxt.text = _stepLeft.ToString();
     }
 }

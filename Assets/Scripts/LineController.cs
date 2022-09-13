@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class LineController : MonoBehaviour
 {
-    [SerializeField] private Texture[] _textures = new Texture[] { };
-    [SerializeField] private Bonus[] _bonus = new Bonus[] { };
+    [SerializeField] private Texture[] _textures;
+    [SerializeField] private Bonus[] _bonus;
 
     public static LineController Instance = null;
 
     public bool InProgress { get; private set; } = false;
 
-    public System.Action<Token[]> TokenToDestroy;
+    public System.Action<Token[]> DestroyedTokensEvent;
     public System.Action<TokenType> ActualTokenTypeEvent;
-    public System.Action EndStep;
+    public System.Action TurnCompletedEvent;
 
     private List<Token> _tokensInChain = new List<Token>();
 
@@ -149,8 +149,8 @@ public class LineController : MonoBehaviour
                 Token[] tokenToDestroy = new Token[_tokensInChain.Count];
                 _tokensInChain.CopyTo(tokenToDestroy);
 
-                TokenToDestroy?.Invoke(tokenToDestroy);
-                EndStep?.Invoke();
+                DestroyedTokensEvent?.Invoke(tokenToDestroy);
+                TurnCompletedEvent?.Invoke();
             }
 
             _tokensInChain.Clear();

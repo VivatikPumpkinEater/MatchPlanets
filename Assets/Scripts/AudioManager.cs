@@ -5,9 +5,9 @@ using Random = UnityEngine.Random;
 
 public class AudioManager : MonoBehaviour
 {
-    [SerializeField] private AudioSource _musicSource = null;
+    [SerializeField] private AudioSource _musicSource;
 
-    [SerializeField] private Pool _pool = null;
+    [SerializeField] private Pool _pool;
     
     [SerializeField] private List<BGmusicClips> _bgClips;
     [SerializeField] private List<EffectClips> _effectClips;
