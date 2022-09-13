@@ -9,9 +9,9 @@ public class LineController : MonoBehaviour
 
     public static LineController Instance;
     
-    public System.Action<Token[]> DestroyedTokensEvent;
-    public System.Action<TokenType> ActualTokenTypeEvent;
-    public System.Action TurnCompletedEvent;
+    public event System.Action<Token[]> DestroyedTokensEvent;
+    public event System.Action<TokenType> ActualTokenTypeEvent;
+    public event System.Action TurnCompletedEvent;
 
     public bool InProgress { get; private set; }
     

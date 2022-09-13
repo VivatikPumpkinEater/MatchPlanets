@@ -202,13 +202,13 @@ public class GameController : MonoBehaviour
                 {
                     var toDestroy = token.Bonus.Activate();
 
-                    switch (token.Bonus.GetType().ToString())
+                    switch (token.Bonus)
                     {
-                        case "Bomb":
+                        case Bomb:
                             AudioManager.LoadEffect("Boom");
                             _ripplePostProcessor.RippleEffect(token.transform.position);
                             break;
-                        case "Rocket":
+                        case Rocket:
                             AudioManager.LoadEffect("Rocket");
                             break;
                     }
