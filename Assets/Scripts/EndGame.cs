@@ -12,7 +12,7 @@ public class EndGame : MonoBehaviour
 
     [SerializeField] private Image[] _stars;
 
-    public static EndGame Instance = null;
+    public static EndGame Instance;
 
     public System.Action<int> AddedStepsEvent;
     
@@ -87,7 +87,7 @@ public class EndGame : MonoBehaviour
     {
         await UniTask.Delay(300);
 
-        for (int i = 0; i < starCount; i++)
+        for (var i = 0; i < starCount; i++)
         {
             var star = _stars[i];
             star.gameObject.SetActive(true);
@@ -113,11 +113,9 @@ public class EndGame : MonoBehaviour
 
     private void EndShowRewardVideo(RewardVideoStatus rewardVideoStatus)
     {
-        switch (rewardVideoStatus)
+        if (rewardVideoStatus == RewardVideoStatus.Finished)
         {
-            case RewardVideoStatus.Finished:
-                ResumeLevel();
-                break;
+            ResumeLevel();
         }
     }
 

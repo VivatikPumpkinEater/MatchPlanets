@@ -10,9 +10,9 @@ public class Token : MonoBehaviour
     public TokenType Type;
     public virtual bool Moving { get; set; } = false;
 
-    private SpriteRenderer _spriteRenderer = null;
+    private SpriteRenderer _spriteRenderer;
     
-    private LineController _lineController = null;
+    private LineController _lineController;
 
     protected virtual void Start()
     {

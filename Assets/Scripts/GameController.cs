@@ -24,9 +24,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private RipplePostProcessor _ripplePostProcessor;
 
     public System.Action<int> StepsLoadedEvent;
-    public List<Token> Tokens => _tokens;
-
-    private List<Token> _tokens = new List<Token>();
+    public List<Token> Tokens { get; } = new List<Token>();
 
     private Dictionary<string, Token> _tokensType = new Dictionary<string, Token>();
 
@@ -134,7 +132,7 @@ public class GameController : MonoBehaviour
 
                 field[cell].ActualToken = token;
 
-                _tokens.Add(token);
+                Tokens.Add(token);
             }
         }
     }
@@ -160,7 +158,7 @@ public class GameController : MonoBehaviour
 
                     _fields[position].ActualToken = token;
 
-                    _tokens.Add(token);
+                    Tokens.Add(token);
 
                     newTokens.Add(token);
                 }
@@ -189,7 +187,7 @@ public class GameController : MonoBehaviour
 
                 _fields[position].ActualToken = null;
 
-                _tokens.Remove(token);
+                Tokens.Remove(token);
 
                 _effectsPool.GetFreeElement(position);
 
@@ -266,7 +264,7 @@ public class GameController : MonoBehaviour
         {
             var position = token.transform.position;
             _fields[position].ActualToken = null;
-            _tokens.Remove(token);
+            Tokens.Remove(token);
             _effectsPool.GetFreeElement(position);
 
             token.SpriteRenderer.sortingOrder = 5;
@@ -302,7 +300,7 @@ public class GameController : MonoBehaviour
         {
             accept = false;
 
-            if (_tokens.Count == 0)
+            if (Tokens.Count == 0)
             {
                 SpawnToken();
                 await UniTask.Delay(_moveTimeMilliseconds);

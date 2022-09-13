@@ -42,11 +42,11 @@ public class FieldConstructor : MonoBehaviour
     [SerializeField] private Button _cancel;
     [SerializeField] private Button _saveLvl;
 
-    public Token ActiveObject { get; private set; } = null;
-    public GameObject SpawnPoint { get; private set; } = null;
+    public Token ActiveObject { get; private set; }
+    public GameObject SpawnPoint { get; private set; }
 
-    public bool Delete { get; private set; } = false;
-    public CellInfo Cell { get; private set; } = null;
+    public bool Delete { get; private set; }
+    public CellInfo Cell { get; private set; } 
 
     private List<ConstructCell> _constructCells = new List<ConstructCell>();
 
@@ -82,9 +82,9 @@ public class FieldConstructor : MonoBehaviour
 
     private void GeneratedSimpleField()
     {
-        for (int y = 0; y < MaxHeight; y++)
+        for (var y = 0; y < MaxHeight; y++)
         {
-            for (int x = 0; x < MaxWidth; x++)
+            for (var x = 0; x < MaxWidth; x++)
             {
                 var cell = Instantiate(_constructCellPrefab, transform);
                 cell.transform.position = new Vector3(x, y);

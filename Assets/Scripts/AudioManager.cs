@@ -12,7 +12,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private List<BGmusicClips> _bgClips;
     [SerializeField] private List<EffectClips> _effectClips;
     
-    private static AudioManager _instance = null;
+    private static AudioManager _instance;
 
     private float _currentMusicVolume = 1;
     private float _currentSoundVolume = 1;
@@ -98,11 +98,11 @@ public class AudioManager : MonoBehaviour
         }
     }
     
-    private void GetEffect(string name)
+    private void GetEffect(string effectName)
     {
         foreach (var effectClip in _effectClips)
         {
-            if (effectClip.Name.Equals(name))
+            if (effectClip.Name.Equals(effectName))
             {
                 var poolObject = _pool.GetFreeElement();
                 

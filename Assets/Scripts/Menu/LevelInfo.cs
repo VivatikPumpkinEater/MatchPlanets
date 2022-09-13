@@ -75,7 +75,7 @@ public class LevelInfo : MonoBehaviour
     {
         ClearStars();
         
-        for (int i = 0; i < starsCount; i++)
+        for (var i = 0; i < starsCount; i++)
         {
             _stars[i].SetActive(true);
         }
@@ -83,7 +83,7 @@ public class LevelInfo : MonoBehaviour
 
     private void ClearStars()
     {
-        for (int i = 0; i < 3; i++)
+        for (var i = 0; i < 3; i++)
         {
             _stars[i].SetActive(false);
         }

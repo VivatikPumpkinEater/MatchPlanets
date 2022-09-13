@@ -8,9 +8,9 @@ public class Loading : MonoBehaviour
 
     [SerializeField] private LvlsConstruct _lvlsData;
 
-    public static Loading Instance = null;
+    public static Loading Instance;
 
-    public int CurrentStars { get; set; } = 0;
+    public int CurrentStars { get; set; }
 
     private static readonly int Start = Animator.StringToHash("Start");
     private static readonly int End = Animator.StringToHash("End");

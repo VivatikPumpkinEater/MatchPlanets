@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class VibrationManager : MonoBehaviour
 {
-    private static VibrationManager _instance = null;
+    private static VibrationManager _instance;
 
     private bool _vibration = true;
 

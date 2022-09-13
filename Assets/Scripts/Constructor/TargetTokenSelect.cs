@@ -7,7 +7,7 @@ public class TargetTokenSelect : MonoBehaviour
 {
     [SerializeField] private List<TargetToken> _targetTokens;
 
-    public TargetConstructItem TargetConstructItem { get; set; } = null;
+    public TargetConstructItem TargetConstructItem { get; set; }
 
     private void Awake()
     {

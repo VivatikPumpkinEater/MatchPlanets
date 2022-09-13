@@ -4,8 +4,8 @@ public class ConstructCell : MonoBehaviour
 {
     private FieldConstructor _fieldConstructor;
 
-    public CellInfo Cell { get; private set; } = null;
-    public GameObject SpawnPoint { get; private set; } = null;
+    public CellInfo Cell { get; private set; }
+    public GameObject SpawnPoint { get; private set; }
 
     private void Awake()
     {

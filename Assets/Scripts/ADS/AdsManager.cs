@@ -7,7 +7,7 @@ public class AdsManager : MonoBehaviour, IAppodealInitializationListener, IRewar
 {
     public static System.Action<RewardVideoStatus> RewardVideoFinishedEvent;
 
-    private static AdsManager _instance = null;
+    private static AdsManager _instance;
     
     private void Awake()
     {
