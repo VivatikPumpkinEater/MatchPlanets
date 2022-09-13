@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private RipplePostProcessor _ripplePostProcessor;
 
-    public System.Action<int> StepsLoadedEvent;
+    public event System.Action<int> StepsLoadedEvent;
     public List<Token> Tokens { get; } = new List<Token>();
 
     private Dictionary<string, Token> _tokensType = new Dictionary<string, Token>();

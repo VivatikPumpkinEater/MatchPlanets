@@ -6,7 +6,7 @@ public class ScrollController : MonoBehaviour
 {
     [SerializeField] private ScrollItem[] _scrollItems;
 
-    public System.Action<Token, Image, GameObject> TokensSelectedEvent;
+    public event System.Action<Token, Image, GameObject> TokensSelectedEvent;
 
     private void Start()
     {
@@ -14,7 +14,8 @@ public class ScrollController : MonoBehaviour
         {
             scrollItem.Button.onClick.AddListener
             (
-                () => TokensSelectedEvent?.Invoke(scrollItem.TokenPrefab, scrollItem.Button.image, scrollItem.SpawnPoint)
+                () => TokensSelectedEvent?.Invoke(scrollItem.TokenPrefab, scrollItem.Button.image,
+                    scrollItem.SpawnPoint)
             );
         }
     }

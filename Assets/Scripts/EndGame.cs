@@ -14,7 +14,7 @@ public class EndGame : MonoBehaviour
 
     public static EndGame Instance;
 
-    public System.Action<int> AddedStepsEvent;
+    public event System.Action<int> AddedStepsEvent;
     
     public FinishType FinishType;
 
