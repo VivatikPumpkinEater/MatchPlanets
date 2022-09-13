@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Pool : MonoBehaviour
 {
-    [SerializeField] private PoolObject _prefab = null;
-    [SerializeField] private Transform _container = null;
-    [SerializeField] private int _startCopacity = 1;
+    [SerializeField] private PoolObject _prefab;
+    [SerializeField] private Transform _container;
+    [SerializeField] private int _startCopacity;
 
     private List<PoolObject> _pool = new List<PoolObject>();
 

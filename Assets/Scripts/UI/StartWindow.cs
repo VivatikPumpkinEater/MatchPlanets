@@ -13,12 +13,7 @@ public class StartWindow : Window
     
     private Vector3 _startScreenSecondPosition;
     private Vector3 _center;
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
+    
     protected override void Start()
     {
         base.Start();

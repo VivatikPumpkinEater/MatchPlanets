@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Ice : Token
 {
-    [SerializeField] private Sprite[] _lvls = new Sprite[] { };
+    [SerializeField] private Sprite[] _lvls;
 
     [SerializeField] private int _hp = 1;
 

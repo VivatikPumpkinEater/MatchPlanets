@@ -4,19 +4,15 @@ using UnityEngine.UI;
 
 public class LevelsWindow : Window
 {
-    [SerializeField] private Button _closeButton = null;
+    [SerializeField] private Button _closeButton;
     
-    private Camera _camera = null;
+    private Camera _camera;
     private Vector3 _screenSize;
 
     private Vector3 _lvlScreenDefaultPosition;
     private Vector3 _startScreenSecondPosition;
     private Vector3 _center;
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+    
 
     protected override void Start()
     {

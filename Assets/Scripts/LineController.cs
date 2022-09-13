@@ -4,28 +4,29 @@ using UnityEngine;
 
 public class LineController : MonoBehaviour
 {
-    [SerializeField] private Texture[] _textures = new Texture[] { };
-    [SerializeField] private Bonus[] _bonus = new Bonus[] { };
+    [SerializeField] private Texture[] _textures;
+    [SerializeField] private Bonus[] _bonus;
 
-    public static LineController Instance = null;
-
-    public bool InProgress { get; private set; } = false;
-
-    public System.Action<Token[]> TokenToDestroy;
+    public static LineController Instance;
+    
+    public System.Action<Token[]> DestroyedTokensEvent;
     public System.Action<TokenType> ActualTokenTypeEvent;
-    public System.Action EndStep;
+    public System.Action TurnCompletedEvent;
 
+    public bool InProgress { get; private set; }
+    
     private List<Token> _tokensInChain = new List<Token>();
 
-    private LineRenderer _lineRenderer = null;
-    private LineRenderer _line => _lineRenderer = _lineRenderer ? _lineRenderer : GetComponent<LineRenderer>();
+    private LineRenderer _lineRenderer;
+    private LineRenderer Line => _lineRenderer = _lineRenderer ? _lineRenderer : GetComponent<LineRenderer>();
 
     private Dictionary<string, Bonus> _bonusData = new Dictionary<string, Bonus>();
 
     private TokenType _actualType;
 
-    private int _frameStep = 0;
-    private float _fpsCounter = 0;
+    private int _frameStep;
+    private float _fpsCounter;
+    private static readonly int MainTex = Shader.PropertyToID("_MainTex");
 
     private void Awake()
     {
@@ -42,23 +43,21 @@ public class LineController : MonoBehaviour
 
     private void Update()
     {
-        if (InProgress)
+        if (!InProgress) return;
+        _fpsCounter += Time.deltaTime;
+
+        if (_fpsCounter >= 1f / 30f)
         {
-            _fpsCounter += Time.deltaTime;
+            _frameStep++;
 
-            if (_fpsCounter >= 1f / 30f)
+            if (_frameStep == _textures.Length)
             {
-                _frameStep++;
-
-                if (_frameStep == _textures.Length)
-                {
-                    _frameStep = 0;
-                }
-
-                _line.material.SetTexture("_MainTex", _textures[_frameStep]);
-
-                _fpsCounter = 0f;
+                _frameStep = 0;
             }
+
+            Line.material.SetTexture(MainTex, _textures[_frameStep]);
+
+            _fpsCounter = 0f;
         }
     }
 
@@ -77,7 +76,7 @@ public class LineController : MonoBehaviour
     {
         if (FSM.Status == GameStatus.Game)
         {
-            if (_line.positionCount == 0)
+            if (Line.positionCount == 0)
             {
                 InProgress = true;
 
@@ -90,17 +89,16 @@ public class LineController : MonoBehaviour
             {
                 if (!_tokensInChain.Contains(token))
                 {
-
                     if (_tokensInChain.Count < 1)
                     {
-                        _line.SetPosition(_line.positionCount++, position);
+                        Line.SetPosition(Line.positionCount++, position);
                         _tokensInChain.Add(token);
 
                         Selected(token.transform);
                     }
                     else if (Vector3.Magnitude(token.transform.position - _tokensInChain[^1].transform.position) < 1.5)
                     {
-                        _line.SetPosition(_line.positionCount++, position);
+                        Line.SetPosition(Line.positionCount++, position);
                         _tokensInChain.Add(token);
 
                         Selected(token.transform);
@@ -116,8 +114,8 @@ public class LineController : MonoBehaviour
                         }
                     }
                 }
-                else if (_line.positionCount >= 2 &&
-                         token.transform.position == _line.GetPosition(_line.positionCount - 2))
+                else if (Line.positionCount >= 2 &&
+                         token.transform.position == Line.GetPosition(Line.positionCount - 2))
                 {
                     UnSelected(_tokensInChain[^1].transform);
 
@@ -128,7 +126,7 @@ public class LineController : MonoBehaviour
                     }
 
                     _tokensInChain.RemoveAt(_tokensInChain.Count - 1);
-                    _line.positionCount -= 1;
+                    Line.positionCount -= 1;
                 }
             }
         }
@@ -140,17 +138,17 @@ public class LineController : MonoBehaviour
         {
             InProgress = false;
 
-            _line.positionCount = 0;
+            Line.positionCount = 0;
 
             UnSelected(_tokensInChain);
 
             if (_tokensInChain.Count >= 3)
             {
-                Token[] tokenToDestroy = new Token[_tokensInChain.Count];
+                var tokenToDestroy = new Token[_tokensInChain.Count];
                 _tokensInChain.CopyTo(tokenToDestroy);
 
-                TokenToDestroy?.Invoke(tokenToDestroy);
-                EndStep?.Invoke();
+                DestroyedTokensEvent?.Invoke(tokenToDestroy);
+                TurnCompletedEvent?.Invoke();
             }
 
             _tokensInChain.Clear();
@@ -165,7 +163,7 @@ public class LineController : MonoBehaviour
     {
         VibrationManager.GetVibration(VibrationType.Pop);
         AudioManager.LoadEffect("AddToken");
-        
+
         select.DOShakeScale(0.1f).OnComplete
         (
             () => select.DOScale(new Vector3(1.2f, 1.2f, 1f), 0.1f)

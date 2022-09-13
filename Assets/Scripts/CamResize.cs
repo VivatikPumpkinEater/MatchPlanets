@@ -11,10 +11,16 @@ public class CamResize : MonoBehaviour
     
     private void Start()
     {
-        float refAspect = _refResolution.x / _refResolution.y;
-        float scaleMultiplier = refAspect / Camera.main.aspect;
-        float newSize = Camera.main.orthographicSize * scaleMultiplier;
+        var refAspect = _refResolution.x / _refResolution.y;
+        
+        var cam = Camera.main;
+        
+        if (cam != null)
+        {
+            var scaleMultiplier = refAspect / cam.aspect;
+            var newSize = cam.orthographicSize * scaleMultiplier;
 
-        Camera.main.orthographicSize = newSize;
+            cam.orthographicSize = newSize;
+        }
     }
 }

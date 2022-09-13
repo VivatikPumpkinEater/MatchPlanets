@@ -4,12 +4,11 @@ using DG.Tweening;
 
 public class DevWindow : Window
 {
-    [SerializeField] private GameObject _developPanel = null;
-    [SerializeField] private Button _close = null;
+    [SerializeField] private GameObject _developPanel;
+    [SerializeField] private Button _close;
     
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
         FullScreen = false;
         
         _close.onClick.AddListener(Close);

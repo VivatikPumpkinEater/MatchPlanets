@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Lvl/lvlPack", fileName = "LvlsData")]
 public class LvlsConstruct : ScriptableObject
 {
-    [field: SerializeField] public List<LvlData> LvlsData = new List<LvlData>();
+    [field: SerializeField] public List<LvlData> LvlsData;
 }
 
 [Serializable]

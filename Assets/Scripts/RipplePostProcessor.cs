@@ -2,29 +2,32 @@ using UnityEngine;
 
 public class RipplePostProcessor : MonoBehaviour
 {
-    public Material RippleMaterial;
-    public float MaxAmount = 50f;
+    [SerializeField] private Material _rippleMaterial;
+    [SerializeField] private float _maxAmount = 50f;
  
-    [Range(0,1)]
-    public float Friction = .9f;
+    [Range(0,1)] [SerializeField]
+    private float _friction;
  
-    private float Amount = 0f;
- 
+    private float _amount;
+    private static readonly int CenterY = Shader.PropertyToID("_CenterY");
+    private static readonly int CenterX = Shader.PropertyToID("_CenterX");
+    private static readonly int Amount = Shader.PropertyToID("_Amount");
+
     void Update()
     {
-        this.RippleMaterial.SetFloat("_Amount", this.Amount);
-        this.Amount *= this.Friction;
+        _rippleMaterial.SetFloat(Amount, _amount);
+        _amount *= _friction;
     }
 
     public void RippleEffect(Vector2 position)
     {
-        this.Amount = this.MaxAmount;
-        this.RippleMaterial.SetFloat("_CenterX", position.x);
-        this.RippleMaterial.SetFloat("_CenterY", position.y);
+        _amount = _maxAmount;
+        _rippleMaterial.SetFloat(CenterX, position.x);
+        _rippleMaterial.SetFloat(CenterY, position.y);
     }
  
     void OnRenderImage(RenderTexture src, RenderTexture dst)
     {
-        Graphics.Blit(src, dst, this.RippleMaterial);
+        Graphics.Blit(src, dst, _rippleMaterial);
     }
 }

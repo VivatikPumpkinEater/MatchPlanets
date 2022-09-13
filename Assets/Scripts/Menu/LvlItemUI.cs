@@ -1,22 +1,21 @@
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LvlItemUI : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _lvlNumber = null;
+    [SerializeField] private TMP_Text _lvlNumber;
 
     [SerializeField] private GameObject[] _stars;
 
-    [SerializeField] private Button _button = null;
+    [SerializeField] private Button _button;
 
-    [SerializeField] private Animator _animator = null;
+    [SerializeField] private Animator _animator;
 
     private LvlData _lvlData;
-
-    private LevelInfo _levelInfo = null;
+    private LevelInfo _levelInfo;
     private int _lvlNum;
+    
     private void Awake()
     {
         foreach (var star in _stars)
@@ -47,7 +46,7 @@ public class LvlItemUI : MonoBehaviour
 
     public void ActivateStar(int count)
     {
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             _stars[i].SetActive(true);
         }

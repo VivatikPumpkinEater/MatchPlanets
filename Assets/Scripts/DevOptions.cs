@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class DevOptions : MonoBehaviour
 {
-    [SerializeField] private Button _unlockAllLevels = null;
-    [SerializeField] private Button _resetAllLevels = null;
+    [SerializeField] private Button _unlockAllLevels;
+    [SerializeField] private Button _resetAllLevels;
 
-    [SerializeField] private LvlsConstruct _lvlsConstruct = null;
+    [SerializeField] private LvlsConstruct _lvlsConstruct;
     
     private void Start()
     {

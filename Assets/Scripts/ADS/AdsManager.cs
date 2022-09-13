@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class AdsManager : MonoBehaviour, IAppodealInitializationListener, IRewardedVideoAdListener
 {
-    public static System.Action<RewardVideoStatus> RewardVideoEndEvent;
+    public static System.Action<RewardVideoStatus> RewardVideoFinishedEvent;
 
-    private static AdsManager _instance = null;
+    private static AdsManager _instance;
     
     private void Awake()
     {
@@ -28,6 +28,19 @@ public class AdsManager : MonoBehaviour, IAppodealInitializationListener, IRewar
         
         Appodeal.setUseSafeArea(true);
         Appodeal.setRewardedVideoCallbacks(this);
+    }
+
+    public static void LoadRewardVideo()
+    {
+        _instance.ShowRewardVideo();
+    }
+    
+    private void ShowRewardVideo()
+    {
+        if (Appodeal.isLoaded(Appodeal.REWARDED_VIDEO))
+        {
+            Appodeal.show(Appodeal.REWARDED_VIDEO);
+        }
     }
 
     public void onInitializationFinished(List<string> errors)
@@ -70,7 +83,7 @@ public class AdsManager : MonoBehaviour, IAppodealInitializationListener, IRewar
 
         if (!finished)
         {
-            RewardVideoEndEvent?.Invoke(RewardVideoStatus.Cancel);
+            RewardVideoFinishedEvent?.Invoke(RewardVideoStatus.Cancel);
         }
     }
 
@@ -78,7 +91,7 @@ public class AdsManager : MonoBehaviour, IAppodealInitializationListener, IRewar
     {
         Debug.Log("onRewardedVideoFinished. Reward: " + amount + " " + name);
         
-        RewardVideoEndEvent?.Invoke(RewardVideoStatus.Finished);
+        RewardVideoFinishedEvent?.Invoke(RewardVideoStatus.Finished);
     }
 
     public void onRewardedVideoExpired()

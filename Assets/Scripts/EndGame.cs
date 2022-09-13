@@ -1,4 +1,3 @@
-using AppodealAds.Unity.Api;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
@@ -7,20 +6,20 @@ using UnityEngine.UI;
 
 public class EndGame : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _endStatus = null;
+    [SerializeField] private TMP_Text _endStatus;
 
-    [SerializeField] private Button _showAds = null;
+    [SerializeField] private Button _showAds;
 
-    [SerializeField] private Image[] _stars = new Image[] { };
+    [SerializeField] private Image[] _stars;
 
-    public static EndGame Instance = null;
+    public static EndGame Instance;
 
-    public System.Action<int> AddSteps;
-
-    private int _gameOver = 0;
+    public System.Action<int> AddedStepsEvent;
+    
     public FinishType FinishType;
 
-    private bool _wait = false;
+    private int _gameOver;
+    private bool _wait;
 
     private void Awake()
     {
@@ -35,7 +34,7 @@ public class EndGame : MonoBehaviour
 
     private void Start()
     {
-        AdsManager.RewardVideoEndEvent += EndShowRewardVideo;
+        AdsManager.RewardVideoFinishedEvent += EndShowRewardVideo;
     }
 
     public void FinishedLvl(FinishType type)
@@ -56,7 +55,7 @@ public class EndGame : MonoBehaviour
             await UniTask.DelayFrame(0);
         }
 
-        FSM.SetGameStatus(GameStatus.EndLvl);
+        FSM.Status = GameStatus.EndLvl;
 
         switch (FinishType)
         {
@@ -88,11 +87,12 @@ public class EndGame : MonoBehaviour
     {
         await UniTask.Delay(300);
 
-        for (int i = 0; i < starCount; i++)
+        for (var i = 0; i < starCount; i++)
         {
-            _stars[i].gameObject.SetActive(true);
+            var star = _stars[i];
+            star.gameObject.SetActive(true);
 
-            _stars[i].transform.DOScale(Vector3.one, 0.3f);
+            star.transform.DOScale(Vector3.one, 0.3f);
 
             AudioManager.LoadEffect("Star");
 
@@ -113,34 +113,25 @@ public class EndGame : MonoBehaviour
 
     private void EndShowRewardVideo(RewardVideoStatus rewardVideoStatus)
     {
-        switch (rewardVideoStatus)
+        if (rewardVideoStatus == RewardVideoStatus.Finished)
         {
-            case RewardVideoStatus.Finished:
-                ResumeLevel();
-                break;
+            ResumeLevel();
         }
     }
 
     private void ResumeLevel()
     {
-        FSM.SetGameStatus(GameStatus.Game);
+        FSM.Status = GameStatus.Game;
 
         _showAds.transform.DOScale(Vector3.zero, 0.2f).OnComplete(() => _showAds.gameObject.SetActive(false));
 
         _gameOver++;
-        AddSteps?.Invoke(5);
+        AddedStepsEvent?.Invoke(5);
     }
 
     private void ShowRewardVideo()
     {
-        if (Appodeal.isLoaded(Appodeal.REWARDED_VIDEO))
-        {
-            Appodeal.show(Appodeal.REWARDED_VIDEO);
-        }
-        else
-        {
-            _showAds.interactable = false;
-        }
+        AdsManager.LoadRewardVideo();
     }
 }
 

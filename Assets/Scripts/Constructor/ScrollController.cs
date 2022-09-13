@@ -4,10 +4,9 @@ using UnityEngine.UI;
 
 public class ScrollController : MonoBehaviour
 {
-    [SerializeField] private ScrollItem[] _scrollItems = new ScrollItem[] { };
+    [SerializeField] private ScrollItem[] _scrollItems;
 
-    public System.Action<Token, Image, GameObject> SelectedToken;
-    public System.Action<Image> CurrentIcon;
+    public System.Action<Token, Image, GameObject> TokensSelectedEvent;
 
     private void Start()
     {
@@ -15,7 +14,7 @@ public class ScrollController : MonoBehaviour
         {
             scrollItem.Button.onClick.AddListener
             (
-                () => SelectedToken?.Invoke(scrollItem.TokenPrefab, scrollItem.Button.image, scrollItem.SpawnPoint)
+                () => TokensSelectedEvent?.Invoke(scrollItem.TokenPrefab, scrollItem.Button.image, scrollItem.SpawnPoint)
             );
         }
     }

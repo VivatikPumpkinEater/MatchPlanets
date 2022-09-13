@@ -4,12 +4,11 @@ using UnityEngine.UI;
 
 public class LevelInfoWindow : Window
 {
-    [SerializeField] private GameObject _levelInfo = null;
-    [SerializeField] private Button _close = null;
+    [SerializeField] private GameObject _levelInfo;
+    [SerializeField] private Button _close;
 
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
         FullScreen = false;
 
         _close.onClick.AddListener(Close);

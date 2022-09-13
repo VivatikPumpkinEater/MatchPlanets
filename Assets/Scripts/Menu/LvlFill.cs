@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class LvlFill : MonoBehaviour
 {
-    [SerializeField] private LvlsConstruct _lvlsConstruct = null;
-    [SerializeField] private LvlItemUI _lvlItem = null;
+    [SerializeField] private LvlsConstruct _lvlsConstruct;
+    [SerializeField] private LvlItemUI _lvlItem;
 
-    [SerializeField] private LevelInfo _levelInfo = null;
+    [SerializeField] private LevelInfo _levelInfo;
 
-    [SerializeField] private Transform[] _lvlPosition = new Transform[] { };
+    [SerializeField] private Transform[] _lvlPosition;
 
     private void Start()
     {
-        for (int i = 0; i < _lvlPosition.Length; i++)
+        for (var i = 0; i < _lvlPosition.Length; i++)
         {
             if (_lvlsConstruct.LvlsData.Count != i)
             {

@@ -1,29 +1,27 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-    [SerializeField] private Button _musicButton = null;
-    [SerializeField] private Button _soundButton = null;
+    [SerializeField] private Button _musicButton;
+    [SerializeField] private Button _soundButton;
 
-    [SerializeField] private Slider _musicSlider = null;
-    [SerializeField] private Slider _soundSlider = null;
+    [SerializeField] private Slider _musicSlider;
+    [SerializeField] private Slider _soundSlider;
 
-    [SerializeField] private Button _vibroButton = null;
+    [SerializeField] private Button _vibroButton;
 
     [SerializeField] private Sprite[] _musicIcons;
     [SerializeField] private Sprite[] _soundIcons;
     
-    private bool _muteMusic = false;
-    private bool _muteSound = false;
+    private bool _muteMusic;
+    private bool _muteSound;
 
-    private TMP_Text _vibroStatus = null;
-    private bool _vibro = true;
+    private TMP_Text _vibroStatus;
 
-    private const string vibroOn = "Vibro On";
-    private const string vibroOff = "Vibro Off";
+    private const string VibroOn = "Vibro On";
+    private const string VibroOff = "Vibro Off";
     
     private void Start()
     {
@@ -86,10 +84,10 @@ public class Settings : MonoBehaviour
         switch (VibrationManager.GetVibrationStatus())
         {
             case true:
-                _vibroStatus.text = vibroOn;
+                _vibroStatus.text = VibroOn;
                 break;
             case false:
-                _vibroStatus.text = vibroOff;
+                _vibroStatus.text = VibroOff;
                 break;
         }
     }

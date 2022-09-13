@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class TokensTargetController : MonoBehaviour
 {
-    [SerializeField] private TokensTargetItem _targetItemPrefab = null;
-    [SerializeField] private Image _border = null;
+    [SerializeField] private TokensTargetItem _targetItemPrefab;
+    [SerializeField] private Image _border;
 
     private Dictionary<string, TokensTargetItem> _targetItems = new Dictionary<string, TokensTargetItem>();
     

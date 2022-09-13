@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class VibrationManager : MonoBehaviour
 {
-    private static VibrationManager _instance = null;
+    private static VibrationManager _instance;
 
     private bool _vibration = true;
 
@@ -61,13 +61,13 @@ public class VibrationManager : MonoBehaviour
             switch (vibrationType)
             {
                 case VibrationType.Pop:
-                    global::Vibration.VibratePop();
+                    Vibration.VibratePop();
                     break;
                 case VibrationType.Peek:
-                    global::Vibration.VibratePeek();
+                    Vibration.VibratePeek();
                     break;
                 case VibrationType.Nope:
-                    global::Vibration.VibrateNope();
+                    Vibration.VibrateNope();
                     break;
             }
         }

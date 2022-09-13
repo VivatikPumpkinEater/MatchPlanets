@@ -1,14 +1,13 @@
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class AsteroidsSpawner : MonoBehaviour
 {
-    [SerializeField] private Transform[] _spawnPoints = new Transform[] { };
-    [SerializeField] private GameObject[] _meteors = new GameObject[] { };
+    [SerializeField] private Transform[] _spawnPoints;
+    [SerializeField] private GameObject[] _meteors;
 
-    [SerializeField] private float _speed = 0f;
+    [SerializeField] private float _speed;
 
-    private GameObject _currentAsteroid = null;
+    private GameObject _currentAsteroid;
     private Vector3 _direction = Vector3.zero;
     private void Update()
     {

@@ -5,20 +5,5 @@ public class Pink : Token
     {
         Type = TokenType.Pink;
     }
-    
-    protected override void OnMouseDown()
-    {
-        base.OnMouseDown();
-    }
-
-    protected override void OnMouseEnter()
-    {
-        base.OnMouseEnter();
-    }
-
-    protected override void OnMouseUp()
-    {
-        base.OnMouseUp();
-    }
 }
 

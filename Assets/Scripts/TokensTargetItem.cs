@@ -5,15 +5,15 @@ using UnityEngine.UI;
 
 public class TokensTargetItem : MonoBehaviour
 {
-    [SerializeField] private Image _tokenSprite = null;
-    [SerializeField] private Image _filling = null;
-    [SerializeField] private TMP_Text _countTxt = null;
+    [SerializeField] private Image _tokenSprite;
+    [SerializeField] private Image _filling;
+    [SerializeField] private TMP_Text _countTxt;
 
-    [SerializeField] private Image _done = null;
+    [SerializeField] private Image _done;
     
 
-    private int _count = 0;
-    private float _step = 0f;
+    private int _count;
+    private float _step;
     
     public void Init(Sprite tokenSprite, int count)
     {

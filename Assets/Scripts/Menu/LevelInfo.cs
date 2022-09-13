@@ -1,30 +1,28 @@
-using System;
 using System.Collections.Generic;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LevelInfo : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _lvlNumber = null;
-    [SerializeField] private TMP_Text _lvlName = null;
+    [SerializeField] private TMP_Text _lvlNumber;
+    [SerializeField] private TMP_Text _lvlName;
     
-    [SerializeField] private Button _startLvl = null;
+    [SerializeField] private Button _startLvl;
 
     [SerializeField] private GameObject[] _stars;
 
     [Header("LvlTargets")] [SerializeField]
-    private GameObject _pointsTarget = null;
+    private GameObject _pointsTarget;
 
-    [SerializeField] private TMP_Text _pointsTargetTxt = null;
+    [SerializeField] private TMP_Text _pointsTargetTxt;
 
-    [SerializeField] private GameObject _tokensTarget = null;
-    [SerializeField] private TokensTargetItem _tokensTargetPrefab = null;
+    [SerializeField] private GameObject _tokensTarget;
+    [SerializeField] private TokensTargetItem _tokensTargetPrefab;
 
     private List<GameObject> _tokensTargets;
 
-    private int _activeLvlNumber = 0;
+    private int _activeLvlNumber;
 
     private void Awake()
     {
@@ -77,7 +75,7 @@ public class LevelInfo : MonoBehaviour
     {
         ClearStars();
         
-        for (int i = 0; i < starsCount; i++)
+        for (var i = 0; i < starsCount; i++)
         {
             _stars[i].SetActive(true);
         }
@@ -85,7 +83,7 @@ public class LevelInfo : MonoBehaviour
 
     private void ClearStars()
     {
-        for (int i = 0; i < 3; i++)
+        for (var i = 0; i < 3; i++)
         {
             _stars[i].SetActive(false);
         }
